@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "muvie"
+name = "muvie_poetry"
 version = "0.1.0"
 description = ""
 authors = ["Ridealist <cjsn92@gmail.com>"]
