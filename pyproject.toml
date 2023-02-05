@@ -14,6 +14,7 @@ docxtpl = "^0.16.5"
 docx2pdf = "^0.1.8"
 django-extensions = "^3.2.1"
 django-ninja = "^0.20.0"
+docxcompose = "^1.4.0"
 
 
 [build-system]
