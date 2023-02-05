@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "muvie"
+version = "0.1.0"
+description = ""
+authors = ["Ridealist <cjsn92@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.1.6"
+djangorestframework = "^3.14.0"
+lxml = "^4.9.2"
+docxtpl = "^0.16.5"
+docx2pdf = "^0.1.8"
+django-extensions = "^3.2.1"
+django-ninja = "^0.20.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
