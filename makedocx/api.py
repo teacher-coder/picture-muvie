@@ -7,42 +7,61 @@ from docxtpl import DocxTemplate, RichText
 from docxcompose.composer import Composer
 from docx import Document as Document_compose
 
+from ninja import Router
+from ninja import Schema, Form
+
 from .forms import LyricForm
 
 
-@api.post("/makedocx/post")
-def lyrics_post(request):
-    if request.method == "POST":
-        form = LyricForm(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data["title"]
-            artist = form.cleaned_data["artist"]
-            lyrics = form.cleaned_data["lyrics"]
+class Song(Schema):
+    title: str
+    artist: str
+    lyrics: list[str]
 
-            lyrics_list = lyrics.split("\r\n")
 
-            make_header(title, artist)
-            master = Document_compose("output/lyrics_header.docx")
-            for lyric in lyrics_list:
-                doc_compose(master, title, artist, lyric)
+router = Router()
 
-            doc = Document_compose("output/combined.docx")
-            buffer = io.BytesIO()
-            doc.save(buffer)
-            buffer.seek(0)
 
-            return HttpResponse(
-                buffer.getvalue(),
-                headers={
-                    "Content-Disposition": 'attachment; filename="report.docx"',
-                    "Content-Type": "application/vnd.openxmlformats-officedocument."
-                    "wordprocessingml.document",
-                    "Access-Control-Expose-Headers": "Content-Disposition",
-                },
-            )
-    else:
-        form = LyricForm()
+@router.get("/")
+def lyrics_get(request):
+    form = LyricForm()
     return render(request, "html/lyrics.html", {"form": form})
+
+
+@router.post("/")
+def lyrics_post(request, song: Song = Form(...)):
+    form = LyricForm(request.POST)
+    if form.is_valid():
+        title = form.cleaned_data["title"]
+        artist = form.cleaned_data["artist"]
+        lyrics = form.cleaned_data["lyrics"]
+
+        if "\r" in lyrics:
+            lyrics_list = lyrics.split("\r\n")
+        elif "\n" in lyrics:
+            lyrics_list = lyrics.split("\n")
+        elif "," in lyrics:
+            lyrics_list = lyrics.split(",")
+
+        make_header(title, artist)
+        master = Document_compose("output/lyrics_header.docx")
+        for lyric in lyrics_list:
+            doc_compose(master, title, artist, lyric)
+
+        doc = Document_compose("output/combined.docx")
+        buffer = io.BytesIO()
+        doc.save(buffer)
+        buffer.seek(0)
+
+        return HttpResponse(
+            buffer.getvalue(),
+            headers={
+                "Content-Disposition": 'attachment; filename="report.docx"',
+                "Content-Type": "application/vnd.openxmlformats-officedocument."
+                "wordprocessingml.document",
+                "Access-Control-Expose-Headers": "Content-Disposition",
+            },
+        )
 
 
 def make_header(title: str, artist: str):
