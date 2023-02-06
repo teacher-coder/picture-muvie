@@ -1,18 +1,12 @@
 import re
 import urllib
 
+import itunespy
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
-import itunespy
 
 api = settings.MUSIXMATCH_API_KEY
-
-
-def get_lyrics_from_search(term):
-    tracks = search_song(term)
-    if tracks:
-        return get_lyrics_from_song_artist(tracks[0].track_name, tracks[0].artist_name)
 
 
 def search_song(term):
@@ -24,6 +18,7 @@ def search_song(term):
         print("connection error")
 
     return tracks
+
 
 def get_lyrics_from_song_artist(song, artist):
     pattern = r"\(feat(.*?)\)"
