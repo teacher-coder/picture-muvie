@@ -16,8 +16,3 @@ def get_lyrics(request, search: str):
         return {"lyrics": lyrics}
     else:
         raise HttpError(404, "Couldn't find the lyrics")
-
-
-@api.post("/lyrics/download")
-def download_lyrics(request):
-    pass
