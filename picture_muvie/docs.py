@@ -1,6 +1,6 @@
-from docxtpl import DocxTemplate, RichText
-from docxcompose.composer import Composer
 from docx import Document
+from docxcompose.composer import Composer
+from docxtpl import DocxTemplate, RichText
 
 
 def make_header(title: str) -> Document:
