@@ -1,6 +1,6 @@
 <template>
-  <footer class="bg-white shadow">
-    <div class="mx-auto overflow-hidden py-3 px-4 sm:px-6 lg:px-8 shadow">
+  <footer class="bg-white">
+    <div class="mx-auto overflow-hidden py-3 px-4 sm:px-6 lg:px-8">
       <nav
         class="-mx-5 -my-2 flex flex-wrap justify-center"
         aria-label="Footer"
@@ -27,10 +27,6 @@ const navigation = {
   main: [
     { name: 'About', href: '#' },
     { name: 'Blog', href: '#' },
-    { name: 'Jobs', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Accessibility', href: '#' },
-    { name: 'Partners', href: '#' },
   ],
   social: [
     {
