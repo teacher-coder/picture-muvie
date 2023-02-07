@@ -4,4 +4,5 @@ export default {
   Django_API: `${DjangoBase}api/`,
 
   getLyrics: 'lyrics',
+  downloadLyricsDocx: 'makedocx',
 }
