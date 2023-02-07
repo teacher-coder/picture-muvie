@@ -4,7 +4,7 @@ from docx import Document
 
 
 def make_header(title: str) -> Document:
-    doc = DocxTemplate("makedocx/templates/lyrics_header_form.docx")
+    doc = DocxTemplate("templates/lyrics_header_form.docx")
 
     context = {
         "title": title,
@@ -14,7 +14,7 @@ def make_header(title: str) -> Document:
 
 
 def make_body(line: str) -> Document:
-    doc = DocxTemplate("makedocx/templates/lyrics_body_form.docx")
+    doc = DocxTemplate("templates/lyrics_body_form.docx")
 
     rt = reform_font_size(line)
     context = {
