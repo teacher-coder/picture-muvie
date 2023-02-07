@@ -20,6 +20,8 @@ beautifulsoup4 = "^4.11.2"
 django-environ = "^0.9.0"
 itunespy = "^1.6.0"
 django-cors-headers = "^3.13.0"
+python-dotenv = "^0.21.1"
+gunicorn = "^20.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
