@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-7bs%27#$471($qbhu#75q^hz&ip8c-#4f35viye99ze%b(&s)("
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-7bs%27#$471($qbhu#75q^hz&ip8c-#4f35viye99ze%b(&s)(")
 MUSIXMATCH_API_KEY = env("MUSIXMATCH_API_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
