@@ -13,14 +13,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-7bs%27#$471($qbhu#75q^hz&ip8c-#4f35viye99ze%b(&s)(")
+SECRET_KEY = env(
+    "DJANGO_SECRET_KEY",
+    default="django-insecure-7bs%27#$471($qbhu#75q^hz&ip8c-#4f35viye99ze%b(&s)(",
+)
 MUSIXMATCH_API_KEY = env("MUSIXMATCH_API_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -32,9 +33,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -43,6 +46,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# CORS 관련 추가
+CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5173", "http://localhost:5173"]
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "picture_muvie.urls"
 
