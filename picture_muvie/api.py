@@ -1,13 +1,11 @@
 import io
 
 from django.http import HttpResponse
-from ninja import NinjaAPI
-from ninja import Schema
+from ninja import NinjaAPI, Schema
 from ninja.errors import HttpError
 
 from .docs import make_doc
 from .utils.search_lyrics import get_lyrics_from_song_artist, search_song
-
 
 api = NinjaAPI()
 
@@ -52,4 +50,3 @@ def get_lyrics(request, search: str):
         return {"lyrics": lyrics}
     else:
         raise HttpError(404, f"Couldn't find the lyrics of {search}")
-
