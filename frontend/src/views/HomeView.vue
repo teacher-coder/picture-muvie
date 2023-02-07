@@ -34,7 +34,7 @@
         class="p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
       <div class="text-right text-lg">
-        학급 인원 : {{ lyrics_list.split('\n').filter((n) => n).length }}명
+        학급 인원 : {{ lyrics_list.length }}명
       </div>
       <button class="bg-rose-600 text-white font-bold py-1 px-4 rounded-md">
         다운로드
@@ -50,7 +50,9 @@ import { computed, ref } from 'vue'
 const songName = ref('')
 const artistName = ref('')
 const lyrics_text = ref('')
-const lyrics_list = computed(() => lyrics_text.value)
+const lyrics_list = computed(() =>
+  lyrics_text.value.split('\n').filter((n) => n)
+)
 
 async function sendSongData() {
   const lyrics = await api.getLyrics({
