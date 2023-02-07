@@ -3,27 +3,21 @@ from docxcompose.composer import Composer
 from docx import Document
 
 
-def make_header(title: str, artist: str) -> Document:
+def make_header(title: str) -> Document:
     doc = DocxTemplate("makedocx/templates/lyrics_header_form.docx")
 
     context = {
         "title": title,
-        "artist": artist,
     }
-
     doc.render(context)
-
     return doc
 
 
-def make_body(title: str, artist: str, line: str) -> Document:
+def make_body(line: str) -> Document:
     doc = DocxTemplate("makedocx/templates/lyrics_body_form.docx")
 
-    rt = reform_size(line)
-
+    rt = reform_font_size(line)
     context = {
-        "title": title,
-        "artist": artist,
         "lyrics": rt,
     }
     doc.render(context)
@@ -31,12 +25,18 @@ def make_body(title: str, artist: str, line: str) -> Document:
     return doc
 
 
-def doc_compose(composer: Composer, title: str, artist: str, lyric: str) -> Composer:
-    doc2 = make_body(title, artist, lyric)
-    composer.append(doc2)
+def make_doc(title: str, lyrics: list[str]) -> Document:
+    master = make_header(title)
+    composer = Composer(master)
+
+    for lyric in lyrics:
+        doc2 = make_body(lyric)
+        composer.append(doc2)
+
+    return master
 
 
-def reform_size(lyric: str):
+def reform_font_size(lyric: str):
     rt = RichText()
     lyric.strip()
 
