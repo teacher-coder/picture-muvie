@@ -63,10 +63,10 @@ async function sendSongData() {
 }
 
 async function sendLyricsData() {
-  const docxFile = await api.getLyrics({
+  const docxFile = await api.downloadLyricsDocx({
     title: songName.value,
     lyrics: lyrics_list.value,
   })
-  downloadFile(docxFile)
+  downloadFile(docxFile, "lyrics.docx")
 }
 </script>
