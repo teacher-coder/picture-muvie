@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: db
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/code
+    depends_on:
+      - db
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app/:ro
+      - /app/node_modules
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=development
+
+volumes:
+  postgres_data:
