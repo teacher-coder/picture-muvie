@@ -45,6 +45,7 @@
 
 <script setup>
 import api from '@/api/modules/lyrics'
+import { downloadFile } from '@/utils'
 import { computed, ref } from 'vue'
 
 const songName = ref('')
@@ -58,10 +59,14 @@ async function sendSongData() {
   const lyrics = await api.getLyrics({
     params: { search: `${songName.value} ${artistName.value}` },
   })
-  lyrics_text.value = lyrics
+  lyrics_text.value = lyrics['lyrics']
 }
 
 async function sendLyricsData() {
-  console.log(lyrics_list.value)
+  const docxFile = await api.downloadLyricsDocx({
+    title: songName.value,
+    lyrics: lyrics_list.value,
+  })
+  downloadFile(docxFile, "lyrics.docx")
 }
 </script>
