@@ -8,18 +8,18 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+    networks:
+      - nginx-network
 
   backend:
     container_name: backend
-    build: ./backend
-    ports:
-      - "8000:8000"
-    command: >
-      sh -c "python manage.py makemigrations &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+    build:
+      context: ./backend # context tells us where to look for the Dockerfile
+    command: /scripts/start_dev.sh
     volumes:
       - ./backend:/code
+    networks:
+      - nginx-network
     depends_on:
       - db
 
@@ -29,13 +29,35 @@ services:
       context: ./frontend
     volumes:
       - ./frontend:/app/:ro
+      # mounting the frontend directory from our local machine into /app. ro specifies the mounted volume is read-only
       - /app/node_modules
     ports:
-      - "8080:8080"
+      - "5173:5173"
     depends_on:
       - backend
+      - db
+    networks:
+      - nginx-network
     environment:
       - NODE_ENV=development
 
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    # map port 8000 on our local machine to port 80 of this container
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - nginx-network
+
+
 volumes:
   postgres_data:
+
+networks:
+  nginx-network:
+    driver: bridge
