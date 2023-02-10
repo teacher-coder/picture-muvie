@@ -63,10 +63,12 @@ async function sendSongData() {
 }
 
 async function sendLyricsData() {
-  const docxFile = await api.downloadLyricsDocx({
+  const response = await api.downloadLyrics({
     title: songName.value,
     lyrics: lyrics_list.value,
   })
-  downloadFile(docxFile, "lyrics.docx")
+  const data = response.data
+  const filename = response.headers['content-disposition'].split('filename=')[1].replace(/"/g, "")
+  downloadFile(data, filename)
 }
 </script>
