@@ -7,7 +7,7 @@ export default {
       .get(urls.getLyrics, ...params)
       .then((response) => response.data)
   },
-  async downloadLyricsDocx(...params) {
+  async downloadLyrics(...params) {
     return myAxios
       .post(urls.downloadLyricsDocx, ...params, {
         responseType: 'blob',
@@ -15,6 +15,6 @@ export default {
           'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         }
       })
-      .then((response) => response.data)
+      .then((response) => response)
   },
 }
