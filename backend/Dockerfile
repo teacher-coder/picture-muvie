@@ -1,26 +1,37 @@
 # Pull base image
-FROM python:3.11.1-alpine
+FROM python:3.11.1-alpine as base
 LABEL maintainer="github.com/Ridiealist"
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# install dependencies
-COPY requirements.txt /tmp/requirements.txt
-COPY ./scripts /scripts
+# Set Python environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 # Set work diretory
 RUN mkdir -p /code
 WORKDIR /code
-EXPOSE 8000
 
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    /py/bin/pip install -r /tmp/requirements.txt && \
-    rm -rf /root/.cache/ && \
-    rm -rf /tmp && \
-    adduser \
+FROM base as builder
+# Set PIP environment variables
+ENV PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    POETRY_VERSION=1.3.2
+
+# Install dependencies
+RUN apk add --no-cache gcc libffi-dev musl-dev && \
+    pip install "poetry==$POETRY_VERSION"
+
+COPY poetry.lock pyproject.toml /code/
+RUN python -m venv /.venv &&\
+    poetry export -f requirements.txt | /.venv/bin/pip install -r /dev/stdin
+
+FROM base as final
+# Copy dependency filled virtual environment
+RUN apk add --no-cache libffi libpq
+COPY --from=builder /.venv /.venv
+
+# Set cmd commands authentication
+COPY ./scripts /scripts
+RUN adduser \
         --disabled-password \
         --no-create-home \
         django-user && \
@@ -31,9 +42,10 @@ RUN python -m venv /py && \
 
 # copy project
 ADD . /code/
+EXPOSE 8000
 
 # PATH parmas setting
-ENV PATH="/scripts:/py/bin:$PATH"
+ENV PATH="/scripts:/.venv/bin:$PATH"
 
 # user settings
 USER django-user
