@@ -5,8 +5,7 @@ from docx.text.paragraph import Paragraph
 from docx.shared import Mm, Pt
 
 
-def make_a4_landscape_section() -> Document:
-    doc = Document()
+def make_a4_landscape_section(doc : Document) -> Document:
     sections = doc.sections
     section = sections[0]
     # a4 size in 'mm' unit
@@ -21,7 +20,6 @@ def make_a4_landscape_section() -> Document:
     section.left_margin = Mm(15)
     section.right_margin = Mm(15)
 
-    return doc
 
 def isHangeul(ch) -> bool:
     JAMO_START_LETTER = 44032
@@ -90,7 +88,8 @@ def make_doc_title(doc : Document, title : str):
 
 
 def make_doc(title : str, lyrics : list[str]) -> Document:
-    doc = make_a4_landscape_section()
+    doc = Document()
+    make_a4_landscape_section(doc)
     make_doc_title(doc, title)
 
     for i in range(len(lyrics)):
