@@ -68,7 +68,9 @@ async function sendLyricsData() {
     lyrics: lyrics_list.value,
   })
   const data = response.data
-  const filename = response.headers['content-disposition'].split('filename=')[1].replace(/"/g, "")
+  console.log(response.headers['content-disposition'])
+  const file_format = response.headers['content-disposition'].split('filename=')[1].replace(/"/g, "").split('.')[1]
+  const filename = songName.value + '.' + file_format
   downloadFile(data, filename)
 }
 </script>
