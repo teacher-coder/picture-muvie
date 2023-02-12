@@ -1,5 +1,4 @@
 import environ
-import os
 
 from pathlib import Path
 
@@ -20,7 +19,7 @@ MUSIXMATCH_API_KEY = env("MUSIXMATCH_API_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
+DEBUG = env("DEBUG")
 
 
 # Application definition
@@ -46,11 +45,11 @@ MIDDLEWARE = [
 ]
 
 # CORS 관련 추가
-CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5173", "http://localhost:5173", "http://localhost:8000", "http://localhost:80"]
+CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5173", "http://localhost:5173", "http://localhost:80"]
 CORS_ALLOW_CREDENTIALS = True
 
 # HOST Settings
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
 
 
 ROOT_URLCONF = "picture_muvie.urls"
@@ -80,11 +79,10 @@ WSGI_APPLICATION = "picture_muvie.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "password",
-        "HOST": "db",  # set in docker-compose.yml
-        "PORT": 5432,  # default postgres port
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
     }
 }
 

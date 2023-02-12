@@ -18,6 +18,11 @@ services:
     command: /scripts/start_dev.sh
     volumes:
       - ./backend:/code
+    environment:
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
     networks:
       - nginx-network
     depends_on:
