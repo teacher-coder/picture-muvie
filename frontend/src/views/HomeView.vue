@@ -1,5 +1,5 @@
 <template>
-  <div class="my-6 mx-7 h-[70vh] flex flex-col w-full space-y-5">
+  <div class="mb-10 mx-7 h-[70vh] flex flex-col w-full space-y-5">
     <form class="flex flex-col space-y-3" @submit.prevent="sendSongData">
       <div class="text-xl font-bold">가사 찾기</div>
       <div class="flex flex-col">
@@ -20,7 +20,7 @@
           class="border-2 border-solid"
         />
       </div>
-      <button class="bg-rose-600 text-white font-bold py-1 px-4 rounded-md">
+      <button class="bg-rose-600 text-white font-bold py-1 rounded-md">
         검색
       </button>
     </form>
@@ -36,10 +36,7 @@
       <div class="text-right text-lg">
         학급 인원 : {{ lyrics_list.length }}명
       </div>
-      <!-- <ButtonDropDown name="다운로드" :items="items" /> -->
-      <button class="bg-rose-600 text-white font-bold py-1 px-4 rounded-md">
-        다운로드
-      </button>
+      <ButtonDropDown name="다운로드" :items="items" />
     </form>
   </div>
 </template>
@@ -79,6 +76,6 @@ async function downloadLyrics(ext) {
     title: songName.value,
     lyrics: lyrics_list.value,
   })
-  downloadFile(docxFile, 'lyrics' + ext)
+  downloadFile(docxFile, (songName.value ?? 'lyrics') + ext)
 }
 </script>
