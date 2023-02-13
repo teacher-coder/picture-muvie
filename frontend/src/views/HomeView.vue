@@ -20,7 +20,9 @@
           class="border-2 border-solid"
         />
       </div>
-      <button class="bg-rose-600 text-white font-bold py-1 rounded-md">
+      <button
+        class="bg-rose-600 text-white font-bold py-1 rounded-md hover:bg-rose-800"
+      >
         검색
       </button>
     </form>

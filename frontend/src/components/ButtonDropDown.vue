@@ -11,7 +11,9 @@
       leave-to="scale-95 opacity-0"
       tailwindcss-origin-class
     >
-      <MenuButton class="bg-rose-600 text-white font-bold py-2">
+      <MenuButton
+        class="bg-rose-600 text-white font-bold py-2 hover:bg-rose-800"
+      >
         <span class="inline-flex">
           {{ name }}
           <ChevronDownIcon
