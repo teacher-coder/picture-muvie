@@ -76,10 +76,7 @@ async function downloadLyrics(ext) {
     title: songName.value,
     lyrics: lyrics_list.value,
   })
-  let fileName = songName.value
-  if (!fileName) {
-    fileName = 'lyrics'
-  }
+  const fileName = songName.value || 'lyrics'
   downloadFile(docxFile, fileName + ext)
 }
 </script>
