@@ -24,7 +24,7 @@
         검색
       </button>
     </form>
-    <form class="flex flex-col space-y-3" @submit.prevent="downloadLyrics">
+    <div class="flex flex-col space-y-3">
       <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
       <textarea
         name="split"
@@ -37,7 +37,7 @@
         학급 인원 : {{ lyrics_list.length }}명
       </div>
       <ButtonDropDown name="다운로드" :items="items" />
-    </form>
+    </div>
   </div>
 </template>
 
@@ -76,6 +76,10 @@ async function downloadLyrics(ext) {
     title: songName.value,
     lyrics: lyrics_list.value,
   })
-  downloadFile(docxFile, (songName.value ?? 'lyrics') + ext)
+  let fileName = songName.value
+  if (!fileName) {
+    fileName = 'lyrics'
+  }
+  downloadFile(docxFile, fileName + ext)
 }
 </script>
