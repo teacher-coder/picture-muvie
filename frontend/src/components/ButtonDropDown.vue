@@ -1,7 +1,7 @@
 <template>
   <Menu>
     <Float
-      placement="right-end"
+      placement="top-end"
       :offset="10"
       enter="transition duration-200 ease-out"
       enter-from="scale-95 opacity-0"
