@@ -7,7 +7,7 @@
         <input
           name="song"
           type="text"
-          v-model="songName"
+          v-model="title"
           class="border-2 border-solid"
         />
       </div>
@@ -16,7 +16,7 @@
         <input
           name="artist"
           type="text"
-          v-model="artistName"
+          v-model="artist"
           class="border-2 border-solid"
         />
       </div>
@@ -48,8 +48,8 @@ import api from '@/api/modules/lyrics'
 import { downloadFile } from '@/utils'
 import { computed, ref } from 'vue'
 
-const songName = ref('')
-const artistName = ref('')
+const title = ref('')
+const artist = ref('')
 const lyrics_text = ref('')
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
@@ -57,16 +57,16 @@ const lyrics_list = computed(() =>
 
 async function sendSongData() {
   const lyrics = await api.getLyrics({
-    params: { search: `${songName.value} ${artistName.value}` },
+    params: { title: title.value, artist: artist.value },
   })
   lyrics_text.value = lyrics['lyrics']
 }
 
 async function sendLyricsData() {
   const docxFile = await api.downloadLyricsDocx({
-    title: songName.value,
+    title: title.value,
     lyrics: lyrics_list.value,
   })
-  downloadFile(docxFile, "lyrics.docx")
+  downloadFile(docxFile, 'lyrics.docx')
 }
 </script>
