@@ -12,8 +12,9 @@ export default {
       .post(urls.downloadLyricsDocx, ...params, {
         responseType: 'blob',
         headers: {
-          'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        }
+          'Content-Type':
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        },
       })
       .then((response) => response.data)
   },

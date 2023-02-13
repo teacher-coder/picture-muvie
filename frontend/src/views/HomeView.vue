@@ -24,7 +24,7 @@
         검색
       </button>
     </form>
-    <form class="flex flex-col space-y-3" @submit.prevent="sendLyricsData">
+    <form class="flex flex-col space-y-3" @submit.prevent="downloadLyrics">
       <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
       <textarea
         name="split"
@@ -36,6 +36,7 @@
       <div class="text-right text-lg">
         학급 인원 : {{ lyrics_list.length }}명
       </div>
+      <!-- <ButtonDropDown name="다운로드" :items="items" /> -->
       <button class="bg-rose-600 text-white font-bold py-1 px-4 rounded-md">
         다운로드
       </button>
@@ -45,6 +46,7 @@
 
 <script setup>
 import api from '@/api/modules/lyrics'
+import ButtonDropDown from '@/components/ButtonDropDown.vue'
 import { downloadFile } from '@/utils'
 import { computed, ref } from 'vue'
 
@@ -54,6 +56,16 @@ const lyrics_text = ref('')
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
+const items = [
+  {
+    name: 'Hwp',
+    onClicked: () => downloadLyrics('.hwp'),
+  },
+  {
+    name: 'Docx',
+    onClicked: () => downloadLyrics('.docx'),
+  },
+]
 
 async function sendSongData() {
   const lyrics = await api.getLyrics({
@@ -62,11 +74,11 @@ async function sendSongData() {
   lyrics_text.value = lyrics['lyrics']
 }
 
-async function sendLyricsData() {
+async function downloadLyrics(ext) {
   const docxFile = await api.downloadLyricsDocx({
     title: songName.value,
     lyrics: lyrics_list.value,
   })
-  downloadFile(docxFile, "lyrics.docx")
+  downloadFile(docxFile, 'lyrics' + ext)
 }
 </script>
