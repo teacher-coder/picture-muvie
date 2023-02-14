@@ -165,6 +165,10 @@ git clone https://github.com/techer-coder/picture-muvie.git
 
 ![picture 3](images/019a2c161f67509e8f56e03373494fca5d02cadbd0f500fad0fad97db867ec85.png)
 
+### 3. 가사 소절별로 각 페이지 나뉜 문서 확인
+
+![picture 4](images/63e9e641ac72672596c28e425c56a0863be542810cc664731e97cc1f7f401cb5.png)
+
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
