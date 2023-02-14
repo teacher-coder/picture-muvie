@@ -1,5 +1,5 @@
 <template>
-  <div class="my-6 mx-7 h-[70vh] flex flex-col w-full space-y-5">
+  <div class="mb-10 mx-7 h-[70vh] flex flex-col w-full space-y-5">
     <form class="flex flex-col space-y-3" @submit.prevent="sendSongData">
       <div class="text-xl font-bold">가사 찾기</div>
       <div class="flex flex-col">
@@ -23,7 +23,7 @@
         />
       </div>
       <button
-        class="bg-rose-600 text-white font-bold py-1 px-4 rounded-md"
+        class="bg-rose-600 text-white font-bold py-1 rounded-md hover:bg-rose-800"
         :disabled="searching"
       >
         <span v-if="searching"
@@ -40,7 +40,7 @@
         <span v-else> 검색 </span>
       </button>
     </form>
-    <form class="flex flex-col space-y-3" @submit.prevent="sendLyricsData">
+    <div class="flex flex-col space-y-3">
       <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
       <textarea
         name="split"
@@ -52,15 +52,14 @@
       <div class="text-right text-lg">
         학급 인원 : {{ lyrics_list.length }}명
       </div>
-      <button class="bg-rose-600 text-white font-bold py-1 px-4 rounded-md">
-        다운로드
-      </button>
-    </form>
+      <ButtonDropDown name="다운로드" :items="items" />
+    </div>
   </div>
 </template>
 
 <script setup>
 import api from '@/api/modules/lyrics'
+import ButtonDropDown from '@/components/ButtonDropDown.vue'
 import { downloadFile } from '@/utils'
 import { computed, ref } from 'vue'
 
@@ -71,6 +70,16 @@ const lyrics_text = ref('')
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
+const items = [
+  {
+    name: 'Hwp',
+    onClicked: () => downloadLyrics('.hwp'),
+  },
+  {
+    name: 'Docx',
+    onClicked: () => downloadLyrics('.docx'),
+  },
+]
 
 async function sendSongData() {
   searching.value = true
@@ -81,11 +90,12 @@ async function sendSongData() {
   searching.value = false
 }
 
-async function sendLyricsData() {
+async function downloadLyrics(ext) {
   const docxFile = await api.downloadLyricsDocx({
     title: songName.value,
     lyrics: lyrics_list.value,
   })
-  downloadFile(docxFile, 'lyrics.docx')
+  const fileName = songName.value || 'lyrics'
+  downloadFile(docxFile, fileName + ext)
 }
 </script>
