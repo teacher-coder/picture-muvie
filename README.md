@@ -157,7 +157,13 @@ git clone https://github.com/techer-coder/picture-muvie.git
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+### 1. 가사 검색
+
+![picture 2](images/dfd64ca7317cc37fad97e5a7df629354c1e18d1912f268e7acb4244fb9e8034a.png)
+
+### 2. 한글 또는 word로 다운로드
+
+![picture 3](images/019a2c161f67509e8f56e03373494fca5d02cadbd0f500fad0fad97db867ec85.png)
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
