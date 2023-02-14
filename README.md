@@ -111,19 +111,11 @@ brew install python
 
 ### Installation
 
-### 1. Backend
+### 1. Clone the repo
 
-1. Clone the repo
-
-   ```sh
-   git clone https://github.com/techer-coder/picture-muvie.git
-   ```
-
-2. In 'backend' directory
-
-   ```sh
-   poetry install
-   ```
+```sh
+git clone https://github.com/techer-coder/picture-muvie.git
+```
 
 ### 2. Docker
 
