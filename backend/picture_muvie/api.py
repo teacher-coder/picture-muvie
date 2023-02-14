@@ -28,9 +28,8 @@ def lyrics_post(request, song: Song):
     return HttpResponse(
         buffer.getvalue(),
         headers={
-            "Content-Disposition": "attachment",
-            "Content-Type": "application/vnd.openxmlformats-officedocument."
-            "wordprocessingml.document",
+            "Content-Disposition": 'attachment; filename="report.docx"', 
+            "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "Access-Control-Expose-Headers": "Content-Disposition",
         },
     )
