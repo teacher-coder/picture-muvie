@@ -49,7 +49,7 @@ CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5173", "http://localhost:5173", "http
 CORS_ALLOW_CREDENTIALS = True
 
 # HOST Settings
-ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(" ")
 
 
 ROOT_URLCONF = "picture_muvie.urls"
