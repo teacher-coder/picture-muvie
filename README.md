@@ -9,7 +9,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a> -->
 
-<h3 align="center">Teacher Muvie(Music Video)</h3>
+<h3 align="center">PicMuvie(Music Video)</h3>
 
   <p align="center">
     초등학교에서 그림 뮤비 제작을 돕는 사이트입니다
