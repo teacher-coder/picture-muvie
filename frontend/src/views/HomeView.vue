@@ -84,23 +84,24 @@ const items = [
 
 async function sendSongData() {
   searching.value = true
-  const lyrics = await api.getLyrics({
-    params: { title: title.value, artist: artist.value },
-  })
+  const lyrics = await api
+    .getLyrics({
+      params: { title: title.value, artist: artist.value },
+    })
+    .catch(() => {
+      searching.value = false
+      lyrics_text.value = '에러가 발생했습니다. 다음에 다시 시도해주세요'
+    })
   lyrics_text.value = lyrics['lyrics']
   searching.value = false
 }
 
 async function downloadLyrics(ext) {
-  const docxFile = await api
-    .downloadLyricsDocx({
-      title: title.value,
-      lyrics: lyrics_list.value,
-    })
-    .catch((error) => {
-      console.log(error)
-      // this.searching = false
-    })
+  const docxFile = await api.downloadLyricsDocx({
+    title: title.value,
+    lyrics: lyrics_list.value,
+  })
+
   const fileName = title.value || 'lyrics'
   downloadFile(docxFile, fileName + ext)
 }
