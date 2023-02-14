@@ -1,14 +1,4 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-
 <a name="readme-top"></a>
-
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -31,16 +21,16 @@
 <h3 align="center">Teacher Muvie(Music Video)</h3>
 
   <p align="center">
-    project_description
+    초등학교에서 그림 뮤비 제작을 돕는 사이트입니다
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/teacher-coder/picture-muvie"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/teacher-coder/picture-muvie">View Demo</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    <a href="https://github.com/teacher-coder/picture-muvie/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/teacher-coder/picture-muvie/issues">Request Feature</a>
   </p>
 </div>
 
@@ -73,6 +63,17 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
+
+유튜브를 보면 학생들의 그림 뮤비 영상이 많이 올라와 있습니다. 그런데 막상 우리 반을 위해 뮤비를 만드려고 하면 노래 가사 문서 만드는 것부터 큰 관문입니다. 다음과 같은 문제를 차례로 겪게 됩니다.
+
+1.  가사를 소절별로 문서 각 페이지마다 붙여넣기를 해서 만들어야 합니다. 학생 수가 25명이니 25페이지네?
+2.  운이 좋게 다른 선생님들이 작업하신 파일을 구했습니다. 가사가 15 페이지만 있네요? 우리반은 25명인데...
+
+문서 작업에 시간이 오래 걸리거나 학급 인원수에 맞지 않는 문제를 해결하기 위해서 프로젝트를 시작하게 되었습니다. 선생님들이 손쉽게 자신의 학급 수에 맞게 가사 파일을 만들 수 있도록 했습니다. 본 서비스는 다음과 같은 단계로 진행됩니다.
+
+1. 노래 제목과 가수를 입력하여 가사를 검색합니다
+2. 가사 줄의 개수는 학급 인원 수를 나타냅니다. 학급 인원 수에 맞게 줄을 수정합니다
+3. 문서 파일을 다운로드 받습니다
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
