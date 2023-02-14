@@ -92,11 +92,16 @@ async function sendSongData() {
 }
 
 async function downloadLyrics(ext) {
-  const docxFile = await api.downloadLyricsDocx({
-    title: title.value,
-    lyrics: lyrics_list.value,
-  })
-  const fileName = songName.value || 'lyrics'
+  const docxFile = await api
+    .downloadLyricsDocx({
+      title: title.value,
+      lyrics: lyrics_list.value,
+    })
+    .catch((error) => {
+      console.log(error)
+      // this.searching = false
+    })
+  const fileName = title.value || 'lyrics'
   downloadFile(docxFile, fileName + ext)
 }
 </script>
