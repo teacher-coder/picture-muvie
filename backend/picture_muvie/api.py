@@ -25,12 +25,10 @@ def lyrics_post(request, song: Song):
     doc.save(buffer)
     buffer.seek(0)
 
-    file_format = "docx"
-
     return HttpResponse(
         buffer.getvalue(),
         headers={
-            "Content-Disposition": f'attachment; filename="lyrics.{file_format}"',
+            "Content-Disposition": "attachment",
             "Content-Type": "application/vnd.openxmlformats-officedocument."
             "wordprocessingml.document",
             "Access-Control-Expose-Headers": "Content-Disposition",
