@@ -22,13 +22,32 @@ services:
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
-      - DB_PASSWORD=password
+      - DB_PASSWORD=postgres
       - DB_HOST=db
-      - DB_PORT=5432
     networks:
       - nginx-network
-      - backend-network
     depends_on:
+      - db
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app/:ro
+      # mounting the frontend directory from our local machine into /app. ro specifies the mounted volume is read-only
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_HOST=db
+    networks:
+      - nginx-network
+    depends_on:
+      - backend
       - db
 
   nginx:

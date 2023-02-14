@@ -4,7 +4,7 @@ function downloadFile(data, fileName) {
   document.body.appendChild(link)
   link.href = url
   link.hidden = true
-  link.setAttribute("download", fileName)
+  link.setAttribute('download', fileName)
   link.click()
   document.body.removeChild(link)
   link.remove()
