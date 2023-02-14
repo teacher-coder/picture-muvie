@@ -2,7 +2,6 @@ import io
 
 from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
-from ninja.errors import HttpError
 
 from .docs import make_doc
 from .utils.search_lyrics import get_lyrics
