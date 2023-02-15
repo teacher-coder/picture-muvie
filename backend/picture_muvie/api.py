@@ -1,5 +1,4 @@
 import io
-import json
 
 from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
@@ -43,5 +42,4 @@ def search_lyrics(request, title: str, artist: str):
         lyrics = (
             f"{artist}의 {title}에 대한 검색 결과를 발견하지 못했습니다.\n다른 검색 사이트를 이용해서 복사/붙여넣기를 해주세요."
         )
-    data = {"lyrics": lyrics}
-    return HttpResponse(json.dumps(data), content_type = "application/json")
+    return {"lyrics": lyrics}
