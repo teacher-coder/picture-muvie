@@ -1,4 +1,5 @@
 import io
+import json
 
 from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
@@ -46,6 +47,7 @@ def get_lyrics(request, search: str):
             break
 
     if lyrics:
-        return {"lyrics": lyrics}
+        data = {"lyrics": lyrics}
+        return HttpResponse(json.dumps(data), content_type = "application/json")
     else:
         raise HttpError(404, f"Couldn't find the lyrics of {search}")
