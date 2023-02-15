@@ -77,12 +77,13 @@ import { computed, ref } from 'vue'
 const title = ref('')
 const artist = ref('')
 const searching = ref(false)
-const compressOffset = ref(20)
+const defaultOffset = 35
 
 const lyrics_text = ref('')
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
+const minLineLength = computed(() => lyrics_text.value.split('\n\n').length)
 const items = [
   {
     name: 'Hwp',
@@ -97,10 +98,12 @@ const items = [
 function increaseLyricsCompression() {
   if (!lyrics_text.value) return
 
-  let lineNum = lyrics_list.value.length
-  while (lineNum === lyrics_list.value.length) {
-    compressOffset.value += 1
-    lyrics_text.value = compressLyrics(lyrics_text.value, compressOffset.value)
+  let compressOffset = defaultOffset
+  let curLineLength = lyrics_list.value.length
+  while (curLineLength === lyrics_list.value.length) {
+    if (curLineLength === minLineLength.value) break
+    compressOffset += 1
+    lyrics_text.value = compressLyrics(lyrics_text.value, compressOffset)
   }
 }
 
@@ -115,7 +118,7 @@ async function searchLyrics() {
     })
   searching.value = false
   if (!response) return
-  lyrics_text.value = compressLyrics(response['lyrics'], 35)
+  lyrics_text.value = compressLyrics(response['lyrics'], defaultOffset)
 }
 
 async function downloadLyrics(ext) {
