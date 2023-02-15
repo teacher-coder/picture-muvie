@@ -42,7 +42,17 @@
       </button>
     </form>
     <div class="flex flex-col space-y-3">
-      <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
+      <div class="flex justify-between">
+        <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
+        <div class="space-x-3">
+          <button
+            class="border border-solid border-gray-400 text-gray-900 font-medium px-3 py-1 rounded-md hover:bg-rose-800"
+            @click="increaseLyricsCompression()"
+          >
+            가사 압축하기
+          </button>
+        </div>
+      </div>
       <textarea
         name="split"
         type="text"
@@ -61,13 +71,13 @@
 <script setup>
 import api from '@/api/modules/lyrics'
 import ButtonDropDown from '@/components/ButtonDropDown.vue'
-import { downloadFile } from '@/utils'
-import { compressLyrics } from '@/utils'
+import { compressLyrics, downloadFile } from '@/utils'
 import { computed, ref } from 'vue'
 
 const title = ref('')
 const artist = ref('')
 const searching = ref(false)
+const compressOffset = ref(20)
 
 const lyrics_text = ref('')
 const lyrics_list = computed(() =>
@@ -84,6 +94,16 @@ const items = [
   },
 ]
 
+function increaseLyricsCompression() {
+  if (!lyrics_text.value) return
+
+  let lineNum = lyrics_list.value.length
+  while (lineNum === lyrics_list.value.length) {
+    compressOffset.value += 1
+    lyrics_text.value = compressLyrics(lyrics_text.value, compressOffset.value)
+  }
+}
+
 async function searchLyrics() {
   searching.value = true
   const response = await api
@@ -95,8 +115,7 @@ async function searchLyrics() {
     })
   searching.value = false
   if (!response) return
-  // lyrics_text.value = response['lyrics']
-  lyrics_text.value = compressLyrics(response['lyrics'], 40)
+  lyrics_text.value = compressLyrics(response['lyrics'], 35)
 }
 
 async function downloadLyrics(ext) {
