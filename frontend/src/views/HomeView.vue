@@ -61,6 +61,7 @@
 import api from '@/api/modules/lyrics'
 import ButtonDropDown from '@/components/ButtonDropDown.vue'
 import { downloadFile } from '@/utils'
+import { compressLyrics } from '@/utils'
 import { computed, ref } from 'vue'
 
 const title = ref('')
@@ -84,8 +85,7 @@ const items = [
 
 async function searchLyrics() {
   searching.value = true
-  const response = await api
-    .getLyrics({
+  const response = await api.getLyrics({
       params: { title: title.value, artist: artist.value },
     })
     .catch(() => {
@@ -93,7 +93,8 @@ async function searchLyrics() {
     })
   searching.value = false
   if (!response) return
-  lyrics_text.value = response['lyrics']
+  // lyrics_text.value = response['lyrics']
+  lyrics_text.value = compressLyrics(response['lyrics'], 40)
 }
 
 async function downloadLyrics(ext) {
