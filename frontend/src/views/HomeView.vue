@@ -1,13 +1,13 @@
 <template>
   <div class="mb-10 mx-7 h-[70vh] flex flex-col w-full space-y-5">
-    <form class="flex flex-col space-y-3" @submit.prevent="sendSongData">
+    <form class="flex flex-col space-y-3" @submit.prevent="searchLyrics">
       <div class="text-xl font-bold">가사 찾기</div>
       <div class="flex flex-col">
         <label for="song" class="text-lg">노래 제목</label>
         <input
           name="song"
           type="text"
-          v-model="songName"
+          v-model="title"
           class="border-2 border-solid"
           required
         />
@@ -17,7 +17,7 @@
         <input
           name="artist"
           type="text"
-          v-model="artistName"
+          v-model="artist"
           class="border-2 border-solid"
           required
         />
@@ -63,9 +63,10 @@ import ButtonDropDown from '@/components/ButtonDropDown.vue'
 import { downloadFile } from '@/utils'
 import { computed, ref } from 'vue'
 
+const title = ref('')
+const artist = ref('')
 const searching = ref(false)
-const songName = ref('')
-const artistName = ref('')
+
 const lyrics_text = ref('')
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
@@ -81,21 +82,27 @@ const items = [
   },
 ]
 
-async function sendSongData() {
+async function searchLyrics() {
   searching.value = true
-  const lyrics = await api.getLyrics({
-    params: { search: `${songName.value} ${artistName.value}` },
-  })
-  lyrics_text.value = lyrics['lyrics']
+  const response = await api
+    .getLyrics({
+      params: { title: title.value, artist: artist.value },
+    })
+    .catch(() => {
+      lyrics_text.value = '에러가 발생했습니다. 다음에 다시 시도해주세요.'
+    })
   searching.value = false
+  if (!response) return
+  lyrics_text.value = response['lyrics']
 }
 
 async function downloadLyrics(ext) {
   const docxFile = await api.downloadLyricsDocx({
-    title: songName.value,
+    title: title.value,
     lyrics: lyrics_list.value,
   })
-  const fileName = songName.value || 'lyrics'
+
+  const fileName = title.value || 'lyrics'
   downloadFile(docxFile, fileName + ext)
 }
 </script>
