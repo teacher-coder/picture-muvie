@@ -1,15 +1,15 @@
 FROM node:19.6.0-alpine as build-stage
 
+RUN mkdir -p /app
 WORKDIR /app/
 
-COPY package.json ./
+COPY package.json package-lock.json /app/
 
 RUN npm cache verify
 
-RUN npm i --silent && \
-    npm install --silent
+RUN npm install
 
-COPY . ./
+COPY . /code/
 
 EXPOSE 5173
 
