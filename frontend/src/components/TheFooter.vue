@@ -24,10 +24,7 @@
 import { defineComponent, h } from 'vue'
 
 const navigation = {
-  main: [
-    { name: 'About', href: '#' },
-    { name: 'Blog', href: '#' },
-  ],
+  main: [{ name: 'Contact Us', href: '#' }],
   social: [
     {
       name: 'Facebook',
