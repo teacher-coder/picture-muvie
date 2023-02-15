@@ -45,6 +45,7 @@
       <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
       <textarea
         name="split"
+        placeholder="입력된 줄의 개수는 학생 수를 나타냅니다&#10;enter키를 눌러 줄을 바꾸고 학생 수를 조정해주세요&#10;아래에 학급 인원 수를 확인하실 수 있습니다"
         type="text"
         v-model="lyrics_text"
         rows="8"
