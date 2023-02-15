@@ -1,7 +1,6 @@
-import environ
-
 from pathlib import Path
 
+import environ
 
 env = environ.Env()
 env.read_env(env.str("ENV_PATH", ".env"))
@@ -45,7 +44,11 @@ MIDDLEWARE = [
 ]
 
 # CORS 관련 추가
-CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5173", "http://localhost:5173", "http://localhost:80"]
+CORS_ORIGIN_WHITELIST = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+    "http://localhost:80",
+]
 CORS_ALLOW_CREDENTIALS = True
 
 # HOST Settings

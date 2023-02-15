@@ -3,10 +3,9 @@ import json
 
 from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
-from ninja.errors import HttpError
 
 from .docs import make_doc
-from .utils.search_lyrics import get_lyrics_from_song_artist, search_song
+from .utils.search_lyrics import get_lyrics
 
 api = NinjaAPI()
 
@@ -37,17 +36,12 @@ def lyrics_post(request, song: Song):
 
 
 @api.get("/lyrics")
-def get_lyrics(request, search: str):
-    tracks = search_song(search)
+def search_lyrics(request, title: str, artist: str):
+    lyrics = get_lyrics(title, artist)
 
-    lyrics = ""
-    for i, track in enumerate(tracks):
-        lyrics = get_lyrics_from_song_artist(track.track_name, track.artist_name)
-        if lyrics or i > 5:
-            break
-
-    if lyrics:
-        data = {"lyrics": lyrics}
-        return HttpResponse(json.dumps(data), content_type = "application/json")
-    else:
-        raise HttpError(404, f"Couldn't find the lyrics of {search}")
+    if not lyrics:
+        lyrics = (
+            f"{artist}의 {title}에 대한 검색 결과를 발견하지 못했습니다.\n다른 검색 사이트를 이용해서 복사/붙여넣기를 해주세요."
+        )
+    data = {"lyrics": lyrics}
+    return HttpResponse(json.dumps(data), content_type = "application/json")
