@@ -23,7 +23,6 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=password
       - DB_HOST=db
-      - DB_PORT=5432
     networks:
       - nginx-network
     depends_on:
