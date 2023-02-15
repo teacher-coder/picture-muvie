@@ -117,37 +117,43 @@ git clone https://github.com/techer-coder/picture-muvie.git
 
 ### 2. Docker
 
-1. In root directory
-
+### 2-1. In Development Mode
+1. Build docker images & Run containers <u>**(!check execute cmd in 'root' directory)**</u>
    ```sh
-   docker-compose up --build
+   docker-compose -f docker-compose.dev.yml up --build
    ```
 
-2. Run docker in demon mode
-
+2. Run containers by using existing one
    ```sh
-   docker-compose up -d
+   docker-compose -f docker-compose.dev.yml up
    ```
 
-3. Check docker images are set
+3. Run docker in demon mode
+
+   ```sh
+   docker-compose -f docker-compose.dev.yml up -d
+   ```
+
+4. Check docker images are set
 
    ```sh
    docker images
    ```
 
-4. Check docker containers are running well
+5. Check docker containers are running well
 
    ```sh
    docker ps -a
    ```
 
-5. Inspect docker containers <u>**(!check docker containers still running)**</u>
+6. Inspect docker containers <u>**(!check docker containers still running)**</u>
 
    ```sh
    docker exec -it <container_names> <shell.dir>
    # docker exec -it frontend sh
    # docker exec -it db bin/bash/
    ```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
