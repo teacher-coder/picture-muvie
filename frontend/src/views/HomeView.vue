@@ -42,7 +42,17 @@
       </button>
     </form>
     <div class="flex flex-col space-y-3">
-      <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
+      <div class="flex justify-between">
+        <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
+        <div class="space-x-3">
+          <button
+            class="border border-solid border-gray-400 text-gray-900 font-medium px-3 py-1 rounded-md hover:bg-rose-800"
+            @click="increaseLyricsCompression()"
+          >
+            가사 압축하기
+          </button>
+        </div>
+      </div>
       <textarea
         name="split"
         placeholder="입력된 줄의 개수는 학생 수를 나타냅니다&#10;enter키를 눌러 줄을 바꾸고 학생 수를 조정해주세요&#10;아래에 학급 인원 수를 확인하실 수 있습니다"
@@ -62,18 +72,19 @@
 <script setup>
 import api from '@/api/modules/lyrics'
 import ButtonDropDown from '@/components/ButtonDropDown.vue'
-import { downloadFile } from '@/utils'
-import { compressLyrics } from '@/utils'
+import { compressLyrics, downloadFile } from '@/utils'
 import { computed, ref } from 'vue'
 
 const title = ref('')
 const artist = ref('')
 const searching = ref(false)
+const defaultOffset = 35
 
 const lyrics_text = ref('')
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
+const minLineLength = computed(() => lyrics_text.value.split('\n\n').length)
 const items = [
   {
     name: 'Hwp',
@@ -85,9 +96,22 @@ const items = [
   },
 ]
 
+function increaseLyricsCompression() {
+  if (!lyrics_text.value) return
+
+  let compressOffset = defaultOffset
+  let curLineLength = lyrics_list.value.length
+  while (curLineLength === lyrics_list.value.length) {
+    if (curLineLength === minLineLength.value) break
+    compressOffset += 1
+    lyrics_text.value = compressLyrics(lyrics_text.value, compressOffset)
+  }
+}
+
 async function searchLyrics() {
   searching.value = true
-  const response = await api.getLyrics({
+  const response = await api
+    .getLyrics({
       params: { title: title.value, artist: artist.value },
     })
     .catch(() => {
@@ -95,8 +119,7 @@ async function searchLyrics() {
     })
   searching.value = false
   if (!response) return
-  // lyrics_text.value = response['lyrics']
-  lyrics_text.value = compressLyrics(response['lyrics'], 40)
+  lyrics_text.value = compressLyrics(response['lyrics'], defaultOffset)
 }
 
 async function downloadLyrics(ext) {
