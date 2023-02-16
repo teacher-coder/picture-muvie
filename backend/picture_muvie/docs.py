@@ -6,7 +6,7 @@ from docx.shared import Mm, Pt
 from docx.section import Section
 from docxtpl import DocxTemplate
 
-from .utils.optimize_lyrics import get_unit_length
+from .utils.optimize_lyrics import get_optimized_font_size
 
 
 def set_section_margin(sec: Section, top: int, bottom: int, left: int, right: int):
@@ -67,14 +67,7 @@ def make_doc(title: str, lyrics: list[str]) -> Document:
     make_doc_title(doc, title)
     doc.add_section()
     set_a4_landscape_section(doc, 1)
-
-    max_length = max([get_unit_length(lyric) for lyric in lyrics])
-    if max_length > 25:
-        font_size = 20
-    elif max_length > 20:
-        font_size = 30
-    else:
-        font_size = 35
+    font_size = get_optimized_font_size(lyrics)
 
     for i in range(len(lyrics)):
         paragraph = doc.add_paragraph()
