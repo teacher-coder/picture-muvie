@@ -45,11 +45,23 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#reference">Reference</a></li>
-
   </ol>
 </details>
 
 <!-- ABOUT THE PROJECT -->
+
+## Installation
+
+### 1. Clone the repo
+  ```sh
+  git clone https://github.com/techer-coder/picture-muvie.git
+  ```
+
+### 2. Run project
+   ```sh
+   docker-compose -f docker-compose.dev.yml up --build
+   ```
+
 
 ## About The Project
 
@@ -85,9 +97,9 @@
 
 - python
 
-```sh
-brew install python
-```
+  ```sh
+  brew install python
+  ```
 
 - poetry
 
@@ -107,17 +119,8 @@ brew install python
   brew install docker
   ```
 
-### Installation
-
-### 1. Clone the repo
-
-```sh
-git clone https://github.com/techer-coder/picture-muvie.git
-```
-
-### 2. Docker
-
-### 2-1. In Development Mode
+### Docker
+#### 1-1. In Development Mode
 1. Build docker images & Run containers <u>**(!check execute cmd in 'root' directory)**</u>
    ```sh
    docker-compose -f docker-compose.dev.yml up --build
