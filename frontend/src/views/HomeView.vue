@@ -23,12 +23,12 @@
         />
       </div>
       <button
-        class="rounded-md bg-rose-600 py-1 font-bold text-white hover:bg-rose-800"
+        class="flex justify-center bg-rose-600 text-white font-bold py-1 rounded-md hover:bg-rose-800"
         :disabled="searching"
       >
         <span v-if="searching"
           ><svg
-            class="flex h-5 w-5 animate-spin justify-center"
+            class="h-5 w-5 animate-spin"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
