@@ -29,13 +29,12 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
+    <li><a href="#quick-start">Quick Start</a></li>
+    <li><a href="#about-the-project">About The Project</a></li>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
-    </li>
-    <li>
+    <li>  
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
@@ -45,9 +44,24 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#reference">Reference</a></li>
-
   </ol>
 </details>
+
+<!-- QUICK START -->
+
+## Quick Start
+
+### 1. Clone the repo
+
+```sh
+git clone https://github.com/techer-coder/picture-muvie.git
+```
+
+### 2. Run project
+
+```sh
+docker-compose -f docker-compose.dev.yml up --build
+```
 
 <!-- ABOUT THE PROJECT -->
 
@@ -85,9 +99,9 @@
 
 - python
 
-```sh
-brew install python
-```
+  ```sh
+  brew install python
+  ```
 
 - poetry
 
@@ -107,23 +121,18 @@ brew install python
   brew install docker
   ```
 
-### Installation
+### Docker
 
-### 1. Clone the repo
+#### 1-1. In Development Mode
 
-```sh
-git clone https://github.com/techer-coder/picture-muvie.git
-```
-
-### 2. Docker
-
-### 2-1. In Development Mode
 1. Build docker images & Run containers <u>**(!check execute cmd in 'root' directory)**</u>
+
    ```sh
    docker-compose -f docker-compose.dev.yml up --build
    ```
 
 2. Run containers by using existing one
+
    ```sh
    docker-compose -f docker-compose.dev.yml up
    ```
@@ -153,7 +162,6 @@ git clone https://github.com/techer-coder/picture-muvie.git
    # docker exec -it frontend sh
    # docker exec -it db bin/bash/
    ```
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
