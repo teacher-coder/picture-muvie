@@ -3,11 +3,9 @@ FROM node:19.6.0-alpine as build-stage
 
 WORKDIR /app/
 
-COPY frontend/package.json /app/
+COPY frontend/package.json frontend/package-lock.json /app/
 
-RUN npm cache verify
-
-RUN npm i --silent && \
+RUN npm cache verify && \
     npm install --silent
 
 COPY frontend /app/
