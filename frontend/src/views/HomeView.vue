@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-10 mx-7 h-[70vh] flex flex-col w-full space-y-5">
+  <div class="mx-7 mb-10 flex h-[70vh] w-full flex-col space-y-5">
     <form class="flex flex-col space-y-3" @submit.prevent="searchLyrics">
       <div class="text-xl font-bold">가사 찾기</div>
       <div class="flex flex-col">
@@ -23,12 +23,12 @@
         />
       </div>
       <button
-        class="bg-rose-600 text-white font-bold py-1 rounded-md hover:bg-rose-800"
+        class="rounded-md bg-rose-600 py-1 font-bold text-white hover:bg-rose-800"
         :disabled="searching"
       >
         <span v-if="searching"
           ><svg
-            class="h-5 w-5 flex justify-center animate-spin"
+            class="flex h-5 w-5 animate-spin justify-center"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -46,7 +46,7 @@
         <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
         <div class="space-x-3">
           <button
-            class="border border-solid border-gray-400 text-gray-900 font-medium px-3 py-1 rounded-md hover:bg-rose-800"
+            class="rounded-md border border-solid border-gray-400 px-3 py-1 font-medium text-gray-900 hover:bg-rose-800"
             @click="increaseLyricsCompression()"
           >
             가사 압축하기
@@ -59,7 +59,7 @@
         type="text"
         v-model="lyrics_text"
         rows="8"
-        class="p-2.5 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
       />
       <div class="text-right text-lg">
         학급 인원 : {{ lyrics_list.length }}명

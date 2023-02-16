@@ -12,17 +12,17 @@
       tailwindcss-origin-class
     >
       <MenuButton
-        class="bg-rose-600 text-white font-bold py-2 hover:bg-rose-800"
+        class="bg-rose-600 py-2 font-bold text-white hover:bg-rose-800"
       >
         <span class="inline-flex">
           {{ name }}
           <ChevronDownIcon
-            class="ml-2 h-5 w-5 text-white -rotate-90"
+            class="ml-2 h-5 w-5 -rotate-90 text-white"
             aria-hidden="true"
         /></span>
       </MenuButton>
 
-      <MenuItems class="space-y-3 mb-3">
+      <MenuItems class="mb-3 space-y-3">
         <MenuItem
           v-slot="{ active }"
           v-for="(item, index) in items"
