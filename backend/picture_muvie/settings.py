@@ -44,12 +44,7 @@ MIDDLEWARE = [
 ]
 
 # CORS 관련 추가
-CORS_ORIGIN_WHITELIST = [
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-    "http://localhost:80",
-    "http://3.38.34.100:80",
-]
+CORS_ORIGIN_WHITELIST = env("CORS_ORIGIN_WHITELIST").split(" ")
 CORS_ALLOW_CREDENTIALS = True
 
 # HOST Settings
