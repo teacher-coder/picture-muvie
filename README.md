@@ -29,7 +29,7 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#quickstart">Quick Start</a></li>
+    <li><a href="#quick-start">Quick Start</a></li>
     <li><a href="#about-the-project">About The Project</a></li>
       <ul>
         <li><a href="#built-with">Built With</a></li>
@@ -48,7 +48,7 @@
   </ol>
 </details>
 
-<!-- ABOUT THE PROJECT -->
+<!-- QUICK START -->
 
 ## Quick Start
 
@@ -63,6 +63,8 @@ git clone https://github.com/techer-coder/picture-muvie.git
 ```sh
 docker-compose -f docker-compose.dev.yml up --build
 ```
+
+<!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
