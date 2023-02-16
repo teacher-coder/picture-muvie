@@ -44,11 +44,7 @@ MIDDLEWARE = [
 ]
 
 # CORS 관련 추가
-CORS_ORIGIN_WHITELIST = [
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-    "http://localhost:80",
-]
+CORS_ORIGIN_WHITELIST = env("CORS_ORIGIN_WHITELIST").split(" ")
 CORS_ALLOW_CREDENTIALS = True
 
 # HOST Settings
@@ -126,7 +122,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+
+# STATIC_ROOT is relative to manage.py, which is in our top-level backend folder: /backend/static/
+STATIC_ROOT = "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

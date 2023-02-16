@@ -22,3 +22,7 @@ docker-compose*
 README.md
 LICENSE
 .DS_Store
+
+# github
+images/
+.github/
