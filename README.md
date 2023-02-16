@@ -29,8 +29,8 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
+    <li><a href="#quickstart">Quick Start</a></li>
+    <li><a href="#about-the-project">About The Project</a></li>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
@@ -50,18 +50,19 @@
 
 <!-- ABOUT THE PROJECT -->
 
-## Installation
+## Quick Start
 
 ### 1. Clone the repo
-  ```sh
-  git clone https://github.com/techer-coder/picture-muvie.git
-  ```
+
+```sh
+git clone https://github.com/techer-coder/picture-muvie.git
+```
 
 ### 2. Run project
-   ```sh
-   docker-compose -f docker-compose.dev.yml up --build
-   ```
 
+```sh
+docker-compose -f docker-compose.dev.yml up --build
+```
 
 ## About The Project
 
@@ -120,13 +121,17 @@
   ```
 
 ### Docker
+
 #### 1-1. In Development Mode
+
 1. Build docker images & Run containers <u>**(!check execute cmd in 'root' directory)**</u>
+
    ```sh
    docker-compose -f docker-compose.dev.yml up --build
    ```
 
 2. Run containers by using existing one
+
    ```sh
    docker-compose -f docker-compose.dev.yml up
    ```
@@ -156,7 +161,6 @@
    # docker exec -it frontend sh
    # docker exec -it db bin/bash/
    ```
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
