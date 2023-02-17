@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-7 mb-10 flex h-[70vh] w-full flex-col space-y-5">
+  <div class="my-5 flex w-full flex-col space-y-5">
     <form class="flex flex-col space-y-3" @submit.prevent="searchLyrics">
       <div class="text-xl font-bold">가사 찾기</div>
       <div class="flex flex-col">
@@ -8,7 +8,7 @@
           name="song"
           type="text"
           v-model="title"
-          class="border-2 border-solid"
+          class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-1.5"
           required
         />
       </div>
@@ -18,7 +18,7 @@
           name="artist"
           type="text"
           v-model="artist"
-          class="border-2 border-solid"
+          class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
           required
         />
       </div>
@@ -46,7 +46,7 @@
         <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
         <div class="space-x-3">
           <button
-            class="rounded-md border border-solid border-gray-400 px-3 py-1 font-medium text-gray-900 hover:bg-rose-800"
+            class="rounded-md border border-solid border-gray-400 px-3 py-1 font-medium text-gray-900 hover:bg-gray-50"
             @click="increaseLyricsCompression()"
           >
             가사 압축하기

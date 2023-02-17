@@ -2,7 +2,7 @@
   <header>
     <TheHeader />
   </header>
-  <main class="flex">
+  <main>
     <RouterView />
   </main>
   <footer>
