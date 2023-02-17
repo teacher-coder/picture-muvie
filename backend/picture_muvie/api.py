@@ -1,10 +1,13 @@
 import io
+import logging
 
 from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
 
 from .docs import make_doc
 from .utils.search_lyrics import get_lyrics
+
+logger = logging.getLogger(__name__)
 
 api = NinjaAPI()
 
@@ -16,6 +19,7 @@ class Song(Schema):
 
 @api.post("/makedocx")
 def lyrics_post(request, song: Song):
+    logger.debug(f"lyrics_post()__song:{song}")
     title = song.title
     lyrics = song.lyrics
     doc = make_doc(title, lyrics)
@@ -27,7 +31,7 @@ def lyrics_post(request, song: Song):
     return HttpResponse(
         buffer.getvalue(),
         headers={
-            "Content-Disposition": 'attachment; filename="report.docx"', 
+            "Content-Disposition": 'attachment; filename="report.docx"',
             "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "Access-Control-Expose-Headers": "Content-Disposition",
         },
