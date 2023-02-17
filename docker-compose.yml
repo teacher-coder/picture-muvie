@@ -1,0 +1,60 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: db
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+    networks:
+      - backend-network
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+    command: /scripts/start_prod.sh
+    volumes:
+      - ./backend:/code
+      - django_static:/backend/static
+    environment:
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_HOST=db
+    networks:
+      - nginx-network
+      - backend-network
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
+      # When a request that starts with /static comes in, we route it to /usr/src/app/static instead of having Django process the request
+      - django_static:/usr/src/app/static
+    networks:
+      - nginx-network
+      - backend-network
+    depends_on:
+      - backend
+
+
+volumes:
+  postgres_data:
+  django_static:
+
+
+networks:
+  nginx-network:
+    driver: bridge
+  backend-network:
+    driver: bridge

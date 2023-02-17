@@ -1,0 +1,28 @@
+# IDE
+.vscode
+
+# Django-Python
+.venv
+env
+
+# Vue.js
+node_modules
+npm-debug.log
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# git
+.git
+.gitignore
+
+# ETC
+README.md
+LICENSE
+.DS_Store
+
+# github
+images/
+.github/
