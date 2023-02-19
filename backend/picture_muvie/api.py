@@ -5,7 +5,8 @@ from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
 
 from .docs import make_doc
-from .utils.search_lyrics import get_lyrics
+# from .utils.search_lyrics import get_lyrics
+from .utils.naver_search import get_lyrics
 
 logger = logging.getLogger(__name__)
 
