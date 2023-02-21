@@ -3,6 +3,7 @@ import logging
 
 from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
+from ninja.errors import ValidationError
 
 from .docs import make_doc
 # from .utils.search_lyrics import get_lyrics
@@ -41,6 +42,8 @@ def lyrics_post(request, song: Song):
 
 @api.get("/lyrics")
 def search_lyrics(request, title: str = "", artist: str = ""):
+    if title + artist == "":
+        raise ValidationError("제목과 가수명 중 적어도 하나는 입력해야 합니다.")
     source, lyrics = get_lyrics(title, artist)
 
     if not lyrics:
