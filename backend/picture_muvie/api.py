@@ -40,11 +40,11 @@ def lyrics_post(request, song: Song):
 
 
 @api.get("/lyrics")
-def search_lyrics(request, title: str, artist: str):
-    lyrics = get_lyrics(title, artist)
+def search_lyrics(request, title: str = "", artist: str = ""):
+    source, lyrics = get_lyrics(title, artist)
 
     if not lyrics:
         lyrics = (
             f"{artist}의 {title}에 대한 검색 결과를 발견하지 못했습니다.\n다른 검색 사이트를 이용해서 복사/붙여넣기를 해주세요."
         )
-    return {"lyrics": lyrics}
+    return {"source": source, "lyrics": lyrics}
