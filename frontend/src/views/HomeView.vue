@@ -8,7 +8,7 @@
           name="song"
           type="text"
           v-model="title"
-          class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-1.5"
+          class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
           required
         />
       </div>
@@ -61,8 +61,13 @@
         rows="8"
         class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
       />
-      <div class="text-right text-lg">
-        학급 인원 : {{ lyrics_list.length }}명
+      <div class="flex justify-between">
+        <div class="text- text-lg">
+          출처 : {{ lyrics_source }}
+        </div>
+        <div class="text-right text-lg">
+          학급 인원 : {{ lyrics_list.length }}명
+        </div>
       </div>
       <ButtonDropDown name="다운로드" :items="items" />
     </div>
@@ -78,9 +83,10 @@ import { computed, ref } from 'vue'
 const title = ref('')
 const artist = ref('')
 const searching = ref(false)
-const defaultOffset = 35
+const defaultOffset = 30
 
 const lyrics_text = ref('')
+const lyrics_source = ref('')
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
@@ -120,6 +126,7 @@ async function searchLyrics() {
   searching.value = false
   if (!response) return
   lyrics_text.value = compressLyrics(response['lyrics'], defaultOffset)
+  lyrics_source.value = response['source']
 }
 
 async function downloadLyrics(ext) {
