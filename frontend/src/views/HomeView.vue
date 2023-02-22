@@ -9,7 +9,7 @@
           v-model="title"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
           :rules="isRequired"
-          placeholder="노래 제목 또는 가수 입력"
+          placeholder="노래 제목 또는 가수 입력 - 예시) 출발 김동률"
         />
         <ErrorMessage name="title" class="text-red-700" />
       </div>
