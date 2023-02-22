@@ -9,17 +9,17 @@
           type="text"
           v-model="title"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
-          required
+          :rules="isRequired"
         />
+        <ErrorMessage name="title" class="text-red-700" />
       </div>
       <div class="flex flex-col">
-        <label for="artist" class="text-lg">가수 이름</label>
+        <label for="artist" class="text-lg italic">가수 이름(선택)</label>
         <Field
           name="artist"
           type="text"
           v-model="artist"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
-          required
         />
       </div>
       <button
@@ -76,7 +76,7 @@
 import api from '@/api/modules/lyrics'
 import ButtonDropDown from '@/components/ButtonDropDown.vue'
 import { compressLyrics, downloadFile } from '@/utils'
-import { Form, Field } from 'vee-validate'
+import { Form, Field, ErrorMessage } from 'vee-validate'
 import { computed, ref } from 'vue'
 
 const title = ref('')
@@ -90,6 +90,13 @@ const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
 const minLineLength = computed(() => lyrics_text.value.split('\n\n').length)
+function isRequired(value) {
+  if (value && value.trim()) {
+    return true
+  }
+  return '필수로 입력해야 합니다'
+}
+
 const items = [
   {
     name: 'Hwp',
