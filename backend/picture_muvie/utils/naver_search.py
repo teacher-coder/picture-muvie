@@ -32,20 +32,20 @@ class SourceType(Enum):
         return self.value[2](*args)
 
 
-def get_lyrics(title: str = "", artist: str = "") -> tuple[str]:
+def get_lyrics(title: str = "") -> tuple[str]:
     lyrics, source = None, None
 
-    lyrics_links = get_links_naver_search(title, artist)
+    lyrics_links = get_links_naver_search(title)
     if len(lyrics_links) != 0:
         source, lyrics = scrap_lyrics(lyrics_links)
 
     return (source, lyrics)
 
 
-def get_links_naver_search(title: str = "", artist: str = "") -> list[str]:
+def get_links_naver_search(title: str = "") -> list[str]:
     lyrics_links = []
 
-    encText = urllib.parse.quote(f"{title} {artist} 가사")
+    encText = urllib.parse.quote(f"{title} 가사")
     url = (
         "https://openapi.naver.com/v1/search/webkr.json"
         + f"?query={encText}"

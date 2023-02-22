@@ -1,26 +1,17 @@
 <template>
   <div class="my-5 flex w-full flex-col space-y-5">
     <Form class="flex flex-col space-y-3" @submit="searchLyrics">
-      <div class="text-xl font-bold">가사 찾기</div>
+      <label for="title" class="text-xl font-bold">가사 찾기</label>
       <div class="flex flex-col">
-        <label for="title" class="text-lg">노래 제목</label>
         <Field
           name="title"
           type="text"
           v-model="title"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
           :rules="isRequired"
+          placeholder="노래 제목 또는 가수 입력"
         />
         <ErrorMessage name="title" class="text-red-700" />
-      </div>
-      <div class="flex flex-col">
-        <label for="artist" class="text-lg italic">가수 이름(선택)</label>
-        <Field
-          name="artist"
-          type="text"
-          v-model="artist"
-          class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
-        />
       </div>
       <button
         class="flex justify-center rounded-md bg-rose-600 py-1 font-bold text-white hover:bg-rose-800"
@@ -80,7 +71,6 @@ import { Form, Field, ErrorMessage } from 'vee-validate'
 import { computed, ref } from 'vue'
 
 const title = ref('')
-const artist = ref('')
 const searching = ref(false)
 const defaultOffset = 30
 
@@ -124,7 +114,7 @@ async function searchLyrics() {
   searching.value = true
   const response = await api
     .getLyrics({
-      params: { title: title.value, artist: artist.value },
+      params: { title: title.value },
     })
     .catch(() => {
       lyrics_text.value = '에러가 발생했습니다. 다음에 다시 시도해주세요.'
