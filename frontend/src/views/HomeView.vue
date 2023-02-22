@@ -62,9 +62,7 @@
         class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
       />
       <div class="flex justify-between">
-        <div class="text- text-lg">
-          출처 : {{ lyrics_source }}
-        </div>
+        <div class="text- text-lg">출처 : {{ lyrics_source }}</div>
         <div class="text-right text-lg">
           학급 인원 : {{ lyrics_list.length }}명
         </div>
