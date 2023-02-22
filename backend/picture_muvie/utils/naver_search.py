@@ -10,6 +10,7 @@ from urllib.parse import unquote_plus
 from .scraper import scrap_genie, scrap_bugs, scrap_melon, scrap_lyrics_site
 
 MINIMUM_LYRICS_LENGTH = 30
+QUERY_DISPLAY_SIZE = 100
 
 CLIENT_ID = settings.NAVER_CLIENT_ID
 CLIENT_SECRET = settings.NAVER_CLIENT_SECRET
@@ -48,7 +49,7 @@ def get_links_naver_search(title: str = "", artist: str = "") -> list[str]:
     url = (
         "https://openapi.naver.com/v1/search/webkr.json"
         + f"?query={encText}"
-        + "&display=20"
+        + f"&display={QUERY_DISPLAY_SIZE}"
     )
     logger.debug(
         f"0_get_links_naver_search()__url:{unquote_plus(url, encoding='utf-8', errors='replace')}"
