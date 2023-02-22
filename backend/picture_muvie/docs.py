@@ -26,7 +26,7 @@ def set_a4_landscape_section(doc: Document, sect_index: int):
     # portrait -> landscape
     section.page_width, section.page_height = section.page_height, section.page_width
     section.orientation = WD_ORIENTATION.LANDSCAPE
-    set_section_margin(section, 170, 20, 24, 24)
+    set_section_margin(section, 165, 20, 24, 24)
 
 
 """
@@ -56,7 +56,7 @@ def add_formatted_text(
 def make_doc_title(doc: Document, title: str):
     context = {
         "title": title,
-        "school": "서울OO초등학교",
+        "school": "OO초등학교",
         "class": "O학년 O반",
     }
     doc.render(context)
@@ -78,7 +78,6 @@ def make_doc(title: str, lyrics: list[str]) -> Document:
         add_formatted_text(
             paragraph_page_number, f"{i + 1}", "malgun_gothic", 10, False
         )
+    doc.add_paragraph()
 
-        if i < len(lyrics) - 1:
-            doc.add_section()
     return doc
