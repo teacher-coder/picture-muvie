@@ -1,11 +1,11 @@
 <template>
   <div class="my-5 flex w-full flex-col space-y-5">
-    <form class="flex flex-col space-y-3" @submit.prevent="searchLyrics">
+    <Form class="flex flex-col space-y-3" @submit="searchLyrics">
       <div class="text-xl font-bold">가사 찾기</div>
       <div class="flex flex-col">
-        <label for="song" class="text-lg">노래 제목</label>
-        <input
-          name="song"
+        <label for="title" class="text-lg">노래 제목</label>
+        <Field
+          name="title"
           type="text"
           v-model="title"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
@@ -14,7 +14,7 @@
       </div>
       <div class="flex flex-col">
         <label for="artist" class="text-lg">가수 이름</label>
-        <input
+        <Field
           name="artist"
           type="text"
           v-model="artist"
@@ -40,7 +40,7 @@
         </span>
         <span v-else> 검색 </span>
       </button>
-    </form>
+    </Form>
     <div class="flex flex-col space-y-3">
       <div class="flex justify-between">
         <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
@@ -76,6 +76,7 @@
 import api from '@/api/modules/lyrics'
 import ButtonDropDown from '@/components/ButtonDropDown.vue'
 import { compressLyrics, downloadFile } from '@/utils'
+import { Form, Field } from 'vee-validate'
 import { computed, ref } from 'vue'
 
 const title = ref('')
