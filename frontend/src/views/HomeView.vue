@@ -1,26 +1,17 @@
 <template>
   <div class="my-5 flex w-full flex-col space-y-5">
-    <form class="flex flex-col space-y-3" @submit.prevent="searchLyrics">
-      <div class="text-xl font-bold">가사 찾기</div>
+    <Form class="flex flex-col space-y-3" @submit="searchLyrics">
+      <label for="title" class="text-xl font-bold">가사 찾기</label>
       <div class="flex flex-col">
-        <label for="song" class="text-lg">노래 제목</label>
-        <input
-          name="song"
+        <Field
+          name="title"
           type="text"
           v-model="title"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
-          required
+          :rules="isRequired"
+          placeholder="노래 제목 또는 가수 입력 - 예시) 출발 김동률"
         />
-      </div>
-      <div class="flex flex-col">
-        <label for="artist" class="text-lg">가수 이름</label>
-        <input
-          name="artist"
-          type="text"
-          v-model="artist"
-          class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
-          required
-        />
+        <ErrorMessage name="title" class="text-red-700" />
       </div>
       <button
         class="flex justify-center rounded-md bg-rose-600 py-1 font-bold text-white hover:bg-rose-800"
@@ -40,7 +31,7 @@
         </span>
         <span v-else> 검색 </span>
       </button>
-    </form>
+    </Form>
     <div class="flex flex-col space-y-3">
       <div class="flex justify-between">
         <label for="split" class="text-xl font-bold">가사 구간 나누기</label>
@@ -62,9 +53,7 @@
         class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
       />
       <div class="flex justify-between">
-        <div class="text- text-lg">
-          출처 : {{ lyrics_source }}
-        </div>
+        <div class="text- text-lg">출처 : {{ lyrics_source }}</div>
         <div class="text-right text-lg">
           학급 인원 : {{ lyrics_list.length }}명
         </div>
@@ -78,10 +67,10 @@
 import api from '@/api/modules/lyrics'
 import ButtonDropDown from '@/components/ButtonDropDown.vue'
 import { compressLyrics, downloadFile } from '@/utils'
+import { Form, Field, ErrorMessage } from 'vee-validate'
 import { computed, ref } from 'vue'
 
 const title = ref('')
-const artist = ref('')
 const searching = ref(false)
 const defaultOffset = 30
 
@@ -91,6 +80,13 @@ const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
 const minLineLength = computed(() => lyrics_text.value.split('\n\n').length)
+function isRequired(value) {
+  if (value && value.trim()) {
+    return true
+  }
+  return '필수로 입력해야 합니다'
+}
+
 const items = [
   {
     name: 'Hwp',
@@ -118,7 +114,7 @@ async function searchLyrics() {
   searching.value = true
   const response = await api
     .getLyrics({
-      params: { title: title.value, artist: artist.value },
+      params: { title: title.value },
     })
     .catch(() => {
       lyrics_text.value = '에러가 발생했습니다. 다음에 다시 시도해주세요.'
