@@ -1,9 +1,9 @@
-import json
-import urllib.request
+import requests
 import urllib.parse
 import logging
 
 from enum import Enum
+from requests.exceptions import HTTPError
 from django.conf import settings
 from urllib.parse import unquote_plus
 
@@ -32,41 +32,41 @@ class SourceType(Enum):
         return self.value[2](*args)
 
 
-def get_lyrics(title: str = "", artist: str = "") -> tuple[str]:
+def get_lyrics(title: str = "") -> tuple[str]:
     lyrics, source = None, None
 
-    lyrics_links = get_links_naver_search(title, artist)
+    lyrics_links = get_links_naver_search(title)
     if len(lyrics_links) != 0:
         source, lyrics = scrap_lyrics(lyrics_links)
 
     return (source, lyrics)
 
 
-def get_links_naver_search(title: str = "", artist: str = "") -> list[str]:
+def get_links_naver_search(title: str = "") -> list[str]:
     lyrics_links = []
 
-    encText = urllib.parse.quote(f"{title} {artist} 가사")
+    encText = urllib.parse.quote(f"{title} 가사")
     url = (
         "https://openapi.naver.com/v1/search/webkr.json"
         + f"?query={encText}"
         + f"&display={QUERY_DISPLAY_SIZE}"
     )
     logger.debug(
-        f"0_get_links_naver_search()__url:{unquote_plus(url, encoding='utf-8', errors='replace')}"
+        f"0_get_links_naver_search()__query:{unquote_plus(title, encoding='utf-8', errors='replace')}"
     )
 
-    request = urllib.request.Request(url)
-    request.add_header("X-Naver-Client-Id", CLIENT_ID)
-    request.add_header("X-Naver-Client-Secret", CLIENT_SECRET)
-    response = urllib.request.urlopen(request)
-    rescode = response.getcode()
-    if rescode == 200:
-        response_body = json.load(response)
-        items = response_body["items"]
+    headers = {
+        "X-Naver-Client-Id" : CLIENT_ID,
+        "X-Naver-Client-Secret" : CLIENT_SECRET,
+    }
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        items = response.json()["items"]
         for item in items:
             lyrics_links.append(item["link"])
-    else:
-        logger.debug(f"0_get_links_naver_search()__Error_Code:{rescode})")
+    except HTTPError as e:
+        logger.error(f"0_get_links_naver_search()__Error_Code:{str(e)})")
 
     logger.debug(f"0_get_links_naver_search()__Success_lyrics_links:\n{lyrics_links}")
     return lyrics_links
