@@ -1,9 +1,9 @@
+import logging
 import re
 import urllib
 
 import itunespy
 import requests
-import logging
 from bs4 import BeautifulSoup
 from django.conf import settings
 from ninja.errors import HttpError

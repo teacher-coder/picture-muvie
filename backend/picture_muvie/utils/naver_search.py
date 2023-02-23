@@ -1,13 +1,13 @@
-import requests
-import urllib.parse
 import logging
-
+import urllib.parse
 from enum import Enum
-from requests.exceptions import HTTPError
-from django.conf import settings
 from urllib.parse import unquote_plus
 
-from .scraper import scrap_genie, scrap_bugs, scrap_melon, scrap_lyrics_site
+import requests
+from django.conf import settings
+from requests.exceptions import HTTPError
+
+from .scraper import scrap_bugs, scrap_genie, scrap_lyrics_site, scrap_melon
 
 MINIMUM_LYRICS_LENGTH = 30
 QUERY_DISPLAY_SIZE = 100
@@ -56,8 +56,8 @@ def get_links_naver_search(title: str = "") -> list[str]:
     )
 
     headers = {
-        "X-Naver-Client-Id" : CLIENT_ID,
-        "X-Naver-Client-Secret" : CLIENT_SECRET,
+        "X-Naver-Client-Id": CLIENT_ID,
+        "X-Naver-Client-Secret": CLIENT_SECRET,
     }
     try:
         response = requests.get(url, headers=headers)
