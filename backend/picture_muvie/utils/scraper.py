@@ -1,9 +1,8 @@
-import re
-import requests
 import logging
+import re
 
-from bs4 import BeautifulSoup
-from bs4 import Comment
+import requests
+from bs4 import BeautifulSoup, Comment
 from requests.exceptions import HTTPError
 
 logger = logging.getLogger(__name__)

@@ -1,17 +1,17 @@
 <template>
   <div class="my-5 flex w-full flex-col space-y-5">
     <Form class="flex flex-col space-y-3" @submit="searchLyrics">
-      <label for="title" class="text-xl font-bold">가사 찾기</label>
+      <label for="query" class="text-xl font-bold">가사 찾기</label>
       <div class="flex flex-col">
         <Field
-          name="title"
+          name="query"
           type="text"
-          v-model="title"
+          v-model="query"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
           :rules="isRequired"
           placeholder="노래 제목 또는 가수 입력 - 예시) 출발 김동률"
         />
-        <ErrorMessage name="title" class="text-red-700" />
+        <ErrorMessage name="query" class="text-red-700" />
       </div>
       <button
         class="flex justify-center rounded-md bg-rose-600 py-1 font-bold text-white hover:bg-rose-800"
@@ -70,7 +70,7 @@ import { compressLyrics, downloadFile } from '@/utils'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import { computed, ref } from 'vue'
 
-const title = ref('')
+const query = ref('')
 const searching = ref(false)
 const defaultOffset = 30
 
@@ -114,7 +114,7 @@ async function searchLyrics() {
   searching.value = true
   const response = await api
     .getLyrics({
-      params: { title: title.value },
+      params: { query: query.value },
     })
     .catch(() => {
       lyrics_text.value = '에러가 발생했습니다. 다음에 다시 시도해주세요.'
@@ -127,11 +127,11 @@ async function searchLyrics() {
 
 async function downloadLyrics(ext) {
   const docxFile = await api.downloadLyricsDocx({
-    title: title.value,
+    title: query.value,
     lyrics: lyrics_list.value,
   })
 
-  const fileName = title.value || 'lyrics'
+  const fileName = query.value || 'lyrics'
   downloadFile(docxFile, fileName + ext)
 }
 </script>
