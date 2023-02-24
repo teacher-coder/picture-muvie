@@ -127,7 +127,7 @@ async function searchLyrics() {
 
 async function downloadLyrics(ext) {
   const docxFile = await api.downloadLyricsDocx({
-    query: query.value,
+    title: query.value,
     lyrics: lyrics_list.value,
   })
 
