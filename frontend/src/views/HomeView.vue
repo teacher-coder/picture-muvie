@@ -9,7 +9,7 @@
           v-model="query"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
           :rules="isRequired"
-          placeholder="노래 제목과 가수 입력 - 예시) 출발 김동률, attention newjeans"
+          placeholder="노래 제목과 가수 입력 - 예시) 출발 김동률, ditto newjeans"
         />
         <ErrorMessage name="query" class="text-red-700" />
       </div>
