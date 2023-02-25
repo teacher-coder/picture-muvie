@@ -1,7 +1,7 @@
+import os
 from pathlib import Path
 
 import environ
-import os
 
 env = environ.Env()
 env.read_env(env.str("ENV_PATH", ".env"))
@@ -164,7 +164,7 @@ LOGGING = {
             "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR, "logs", "picture_muvie.log"),
             "maxBytes": 1024 * 1024 * 5,  # 5 MB
-            "backupCount": 5, 
+            "backupCount": 5,
             "formatter": "standard",
         },
     },

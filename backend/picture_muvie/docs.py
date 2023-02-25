@@ -1,12 +1,47 @@
+import io
+
 from docx import Document
-from docx.enum.section import WD_ORIENTATION, WD_SECTION
+from docx.enum.section import WD_ORIENTATION
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.text.paragraph import Paragraph
-from docx.shared import Mm, Pt
 from docx.section import Section
+from docx.shared import Mm, Pt
+from docx.text.paragraph import Paragraph
 from docxtpl import DocxTemplate
 
 from .utils.optimize_lyrics import get_optimized_font_size
+
+
+def make_picmuvie_doc(song) -> bytes:
+    doc = make_doc(song.title, song.lyrics)
+    return convert_docs_to_bytes(doc)
+
+
+def make_doc(title: str, lyrics: list[str]) -> Document:
+    doc = DocxTemplate("./picture_muvie/templates/title.docx")
+    make_title_page(doc, title)
+    doc.add_section()
+    set_a4_landscape_section(doc, 1)
+    font_size = get_optimized_font_size(lyrics)
+
+    for i in range(len(lyrics)):
+        paragraph = doc.add_paragraph()
+        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        add_formatted_text(paragraph, lyrics[i], "malgun_gothic", font_size, True)
+        paragraph_page_number = doc.add_paragraph()
+        paragraph_page_number.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        add_formatted_text(
+            paragraph_page_number, f"{i + 1}", "malgun_gothic", 10, False
+        )
+    doc.add_paragraph()
+
+    return doc
+
+
+def convert_docs_to_bytes(doc: Document):
+    buffer = io.BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+    return buffer.getvalue()
 
 
 def set_section_margin(sec: Section, top: int, bottom: int, left: int, right: int):
@@ -53,31 +88,10 @@ def add_formatted_text(
     run.bold = is_bold
 
 
-def make_doc_title(doc: Document, title: str):
+def make_title_page(doc: Document, title: str):
     context = {
         "title": title,
         "school": "OO초등학교",
         "class": "O학년 O반",
     }
     doc.render(context)
-
-
-def make_doc(title: str, lyrics: list[str]) -> Document:
-    doc = DocxTemplate("./picture_muvie/templates/title.docx")
-    make_doc_title(doc, title)
-    doc.add_section()
-    set_a4_landscape_section(doc, 1)
-    font_size = get_optimized_font_size(lyrics)
-
-    for i in range(len(lyrics)):
-        paragraph = doc.add_paragraph()
-        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        add_formatted_text(paragraph, lyrics[i], "malgun_gothic", font_size, True)
-        paragraph_page_number = doc.add_paragraph()
-        paragraph_page_number.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        add_formatted_text(
-            paragraph_page_number, f"{i + 1}", "malgun_gothic", 10, False
-        )
-    doc.add_paragraph()
-
-    return doc

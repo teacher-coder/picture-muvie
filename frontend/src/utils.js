@@ -73,8 +73,8 @@ function compressLyrics(lyric_text, buffer_offset = 25) {
   let buffer_length = 0
   let idx = 0
 
-  const lyrics_list = lyric_text.split('\n').map(str => str.trim())
-
+  const lyrics_list = lyric_text.trim().split('\n').map(str => str.trim())
+  
   while (idx < lyrics_list.length) {
     if (lyrics_list[idx] === '') {
       if (buffer === '') {

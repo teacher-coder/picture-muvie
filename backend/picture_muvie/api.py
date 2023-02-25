@@ -1,12 +1,9 @@
-import io
 import logging
 
 from django.http import HttpResponse
 from ninja import NinjaAPI, Schema
-from ninja.errors import ValidationError
 
-from .docs import make_doc
-# from .utils.search_lyrics import get_lyrics
+from .docs import make_picmuvie_doc
 from .utils.naver_search import get_lyrics
 
 logger = logging.getLogger(__name__)
@@ -22,16 +19,10 @@ class Song(Schema):
 @api.post("/makedocx")
 def lyrics_post(request, song: Song):
     logger.debug(f"lyrics_post()__song:{song}")
-    title = song.title
-    lyrics = song.lyrics
-    doc = make_doc(title, lyrics)
-
-    buffer = io.BytesIO()
-    doc.save(buffer)
-    buffer.seek(0)
+    picmuvie_doc = make_picmuvie_doc(song)
 
     return HttpResponse(
-        buffer.getvalue(),
+        picmuvie_doc,
         headers={
             "Content-Disposition": 'attachment; filename="report.docx"',
             "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -41,11 +32,8 @@ def lyrics_post(request, song: Song):
 
 
 @api.get("/lyrics")
-def search_lyrics(request, title: str):
-    source, lyrics = get_lyrics(title)
-
+def search_lyrics(request, query: str):
+    source, title, artist, lyrics = get_lyrics(query)
     if not lyrics:
-        lyrics = (
-            f"{title}에 대한 검색 결과를 발견하지 못했습니다.\n다른 검색 사이트를 이용해서 복사/붙여넣기를 해주세요."
-        )
-    return {"source": source, "lyrics": lyrics}
+        lyrics = f"{query}에 대한 검색 결과를 발견하지 못했습니다.\n다른 검색 사이트를 이용해서 복사/붙여넣기를 해주세요."
+    return {"source": source, "title": title, "artist": artist, "lyrics": lyrics}
