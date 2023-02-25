@@ -74,7 +74,7 @@ def scrap_lyrics(lyrics_links: list[str]) -> tuple[str]:
         host = get_site_host(link)
         if host and host in host_dict:
             search_data = host_dict[host]["scrap_lyrics"](link, headers)
-            if search_data is not None:
+            if search_data:
                 title = search_data["title"]
                 artist = search_data["artist"]
                 lyrics = search_data["lyrics"]
