@@ -76,8 +76,8 @@ const defaultOffset = 30
 
 const lyrics_text = ref('')
 const lyrics_source = ref('')
-const lyrics_title = ref('')
-const lyrics_artist = ref('')
+var lyrics_title
+var lyrics_artist
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
@@ -125,17 +125,17 @@ async function searchLyrics() {
   if (!response) return
   lyrics_text.value = compressLyrics(response['lyrics'], defaultOffset)
   lyrics_source.value = response['source']
-  lyrics_title.value = response['title']
-  lyrics_artist.value = response['artist']
+  lyrics_title = response['title']
+  lyrics_artist = response['artist']
 }
 
 async function downloadLyrics(ext) {
   const docxFile = await api.downloadLyricsDocx({
-    title: lyrics_title.value,
+    title: lyrics_title,
     lyrics: lyrics_list.value,
   })
 
-  const fileName = lyrics_title.value + '-' + lyrics_artist.value || 'lyrics'
+  const fileName = lyrics_title + '-' + lyrics_artist || 'lyrics'
   downloadFile(docxFile, fileName + ext)
 }
 </script>
