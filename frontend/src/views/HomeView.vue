@@ -9,7 +9,7 @@
           v-model="query"
           class="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
           :rules="isRequired"
-          placeholder="노래 제목 또는 가수 입력 - 예시) 출발 김동률"
+          placeholder="노래 제목과 가수 입력 - 예시) 출발 김동률, ditto newjeans"
         />
         <ErrorMessage name="query" class="text-red-700" />
       </div>
@@ -76,6 +76,8 @@ const defaultOffset = 30
 
 const lyrics_text = ref('')
 const lyrics_source = ref('')
+var lyrics_title
+var lyrics_artist
 const lyrics_list = computed(() =>
   lyrics_text.value.split('\n').filter((n) => n)
 )
@@ -123,15 +125,17 @@ async function searchLyrics() {
   if (!response) return
   lyrics_text.value = compressLyrics(response['lyrics'], defaultOffset)
   lyrics_source.value = response['source']
+  lyrics_title = response['title']
+  lyrics_artist = response['artist']
 }
 
 async function downloadLyrics(ext) {
   const docxFile = await api.downloadLyricsDocx({
-    title: query.value,
+    title: lyrics_title,
     lyrics: lyrics_list.value,
   })
 
-  const fileName = query.value || 'lyrics'
+  const fileName = lyrics_title + '-' + lyrics_artist || 'lyrics'
   downloadFile(docxFile, fileName + ext)
 }
 </script>

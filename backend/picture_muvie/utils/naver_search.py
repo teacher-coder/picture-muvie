@@ -23,9 +23,9 @@ def get_lyrics(title: str = "") -> tuple[str]:
 
     lyrics_links = get_links_naver_search(title)
     if lyrics_links:
-        source, lyrics = scrap_lyrics(lyrics_links)
+        source, title, artist, lyrics = scrap_lyrics(lyrics_links)
 
-    return (source, lyrics)
+    return (source, title, artist, lyrics)
 
 
 def get_links_naver_search(title: str = "") -> list[str]:
@@ -58,7 +58,7 @@ def get_links_naver_search(title: str = "") -> list[str]:
     return lyrics_links
 
 
-def scrap_lyrics(lyrics_links: list[str]) -> str:
+def scrap_lyrics(lyrics_links: list[str]) -> tuple[str]:
     host_dict = {
         "genie": {"source": "지니뮤직", "scrap_lyrics": scrap_genie},
         "melon": {"source": "멜론", "scrap_lyrics": scrap_melon},
@@ -68,18 +68,22 @@ def scrap_lyrics(lyrics_links: list[str]) -> str:
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/76.0.3809.100 Version/16.2 Safari/605.1.15",
     }
-    lyrics, source = None, None
+    source, title, artist, lyrics = None, None, None, None
 
     for link in lyrics_links:
         host = get_site_host(link)
         if host and host in host_dict:
-            lyrics = host_dict[host]["scrap_lyrics"](link, headers)
-            source = host_dict[host]["source"]
+            search_data = host_dict[host]["scrap_lyrics"](link, headers)
+            if search_data:
+                title = search_data["title"]
+                artist = search_data["artist"]
+                lyrics = search_data["lyrics"]
+                source = host_dict[host]["source"]
 
         if lyrics and len(lyrics) > MINIMUM_LYRICS_LENGTH:
             break
 
-    return (source, lyrics)
+    return (source, title, artist, lyrics)
 
 
 def get_site_host(link):

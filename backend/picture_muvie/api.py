@@ -33,7 +33,7 @@ def lyrics_post(request, song: Song):
 
 @api.get("/lyrics")
 def search_lyrics(request, query: str):
-    source, lyrics = get_lyrics(query)
+    source, title, artist, lyrics = get_lyrics(query)
     if not lyrics:
         lyrics = f"{query}에 대한 검색 결과를 발견하지 못했습니다.\n다른 검색 사이트를 이용해서 복사/붙여넣기를 해주세요."
-    return {"source": source, "lyrics": lyrics}
+    return {"source": source, "title": title, "artist": artist, "lyrics": lyrics}
