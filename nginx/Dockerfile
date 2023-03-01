@@ -19,6 +19,11 @@ FROM nginx:1.23-alpine as production-stage
 COPY nginx/prod.conf /etc/nginx/nginx.conf
 COPY --from=build-stage /app/dist /dist/
 
+# Copy openssl certificate to docker image
+COPY openssl/certs /etc/ssl/certs
+COPY openssl/private /etc/ssl/private
+
 EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]

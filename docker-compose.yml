@@ -15,10 +15,11 @@ services:
     container_name: backend
     build:
       context: ./backend
+    ports:
+      - 8000:8000
     command: /scripts/start_prod.sh
     volumes:
       - ./backend:/code
-      - django_static:/backend/static
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
@@ -36,11 +37,10 @@ services:
       context: .
       dockerfile: nginx/Dockerfile
     ports:
-      - 8000:80
+      - 80:80
+      - 443:443
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
-      # When a request that starts with /static comes in, we route it to /usr/src/app/static instead of having Django process the request
-      - django_static:/usr/src/app/static
     networks:
       - nginx-network
       - backend-network
@@ -50,7 +50,6 @@ services:
 
 volumes:
   postgres_data:
-  django_static:
 
 
 networks:
