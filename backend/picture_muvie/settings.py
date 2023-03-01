@@ -24,7 +24,7 @@ NAVER_CLIENT_SECRET = env("NAVER_CLIENT_SECRET")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = bool(int(env("DEBUG")))
 
 
 # Application definition
