@@ -24,5 +24,6 @@ COPY openssl/certs /etc/ssl/certs
 COPY openssl/private /etc/ssl/private
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
