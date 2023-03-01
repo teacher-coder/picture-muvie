@@ -39,10 +39,12 @@ services:
       dockerfile: nginx/Dockerfile
     ports:
       - 80:80
+      - 433:433
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
       # When a request that starts with /static comes in, we route it to /usr/src/app/static instead of having Django process the request
       - django_static:/usr/src/app/static
+      - /etc/ssl:/etc/ssl/
     networks:
       - nginx-network
       - backend-network
