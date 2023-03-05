@@ -12,6 +12,7 @@ from .scraper import scrap_bugs, scrap_genie, scrap_lyrics_site, scrap_melon
 
 MINIMUM_LYRICS_LENGTH = 30
 QUERY_DISPLAY_SIZE = 100
+SIMILARITY_SCORE_OFFSET = 70
 
 CLIENT_ID = settings.NAVER_CLIENT_ID
 CLIENT_SECRET = settings.NAVER_CLIENT_SECRET
@@ -19,27 +20,27 @@ CLIENT_SECRET = settings.NAVER_CLIENT_SECRET
 logger = logging.getLogger(__name__)
 
 
-def get_lyrics(title: str = "") -> tuple[str]:
-    source, artist, lyrics = None, None, None
+def get_lyrics(query: str = "") -> tuple[str]:
+    source, title, artist, lyrics = None, None, None, None
 
-    lyrics_links = get_links_naver_search(title)
+    lyrics_links = get_links_naver_search(query)
     if lyrics_links:
-        source, title, artist, lyrics = scrap_lyrics(lyrics_links)
+        source, title, artist, lyrics = scrap_lyrics(query, lyrics_links)
 
     return (source, title, artist, lyrics)
 
 
-def get_links_naver_search(title: str = "") -> list[str]:
+def get_links_naver_search(query: str = "") -> list[str]:
     lyrics_links = []
 
-    encText = urllib.parse.quote(f"{title} 가사")
+    encText = urllib.parse.quote(f"{query} 가사")
     url = (
         "https://openapi.naver.com/v1/search/webkr.json"
         + f"?query={encText}"
         + f"&display={QUERY_DISPLAY_SIZE}"
     )
     logger.debug(
-        f"0_get_links_naver_search()__query:{unquote_plus(title, encoding='utf-8', errors='replace')}"
+        f"0_get_links_naver_search()__query:{unquote_plus(query, encoding='utf-8', errors='replace')}"
     )
 
     headers = {
@@ -61,7 +62,7 @@ def get_links_naver_search(title: str = "") -> list[str]:
     return lyrics_links
 
 
-def scrap_lyrics(lyrics_links: list[str]) -> tuple[str]:
+def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
     host_dict = {
         "genie": {"source": "지니뮤직", "scrap_lyrics": scrap_genie},
         "melon": {"source": "멜론", "scrap_lyrics": scrap_melon},
@@ -72,19 +73,32 @@ def scrap_lyrics(lyrics_links: list[str]) -> tuple[str]:
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/76.0.3809.100 Version/16.2 Safari/605.1.15",
     }
     source, title, artist, lyrics = None, None, None, None
+    max_similarity_score = 0
 
     for link in lyrics_links:
         host = get_site_host(link)
         if host and host in host_dict:
             search_data = host_dict[host]["scrap_lyrics"](link, headers)
-            if search_data:
-                title = search_data["title"]
-                artist = search_data["artist"]
-                lyrics = search_data["lyrics"]
-                source = host_dict[host]["source"]
+            if not search_data:
+                continue
 
-        if lyrics and len(lyrics) > MINIMUM_LYRICS_LENGTH:
-            break
+            temp_source = host_dict[host]["source"]
+            temp_title = search_data["title"]
+            temp_artist = search_data["artist"]
+            temp_lyrics = search_data["lyrics"]
+
+            cur_score = fuzz.partial_token_sort_ratio(query, temp_title)
+
+            if cur_score > max_similarity_score:
+                if temp_lyrics and len(temp_lyrics) > MINIMUM_LYRICS_LENGTH:
+                    source = temp_source
+                    title = temp_title
+                    artist = temp_artist
+                    lyrics = temp_lyrics
+                max_similarity_score = cur_score
+
+            if max_similarity_score > SIMILARITY_SCORE_OFFSET:
+                break
 
     return (source, title, artist, lyrics)
 
@@ -95,8 +109,3 @@ def get_site_host(link):
     if not result:
         return
     return result.group(1)
-
-
-def get_match_ratio(query: str, title: str, artist: str) -> bool:
-    song_info = title + " " + artist
-    return (fuzz.partial_token_sort_ratio(query, song_info) > 50)
