@@ -136,7 +136,8 @@ async function searchLyrics() {
   if (!response) return
 
   const lyric_text = response['lyrics']
-  if (lyric_text.split('\n').filter((n) => n).length > 24) {
+  const lyric_line_length = lyric_text.split('\n').filter((n) => n).length
+  if (lyric_line_length > 24) {
     setDefaultOffset(response['lyrics'])
     lyrics_text.value = compressLyrics(lyric_text, defaultOffset)
   } else lyrics_text.value = lyric_text
