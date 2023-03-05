@@ -12,7 +12,7 @@ from .scraper import scrap_bugs, scrap_genie, scrap_lyrics_site, scrap_melon
 
 MINIMUM_LYRICS_LENGTH = 30
 QUERY_DISPLAY_SIZE = 100
-SIMILARITY_SCORE_OFFSET = 70
+SIMILARITY_SCORE_OFFSET = 60
 
 CLIENT_ID = settings.NAVER_CLIENT_ID
 CLIENT_SECRET = settings.NAVER_CLIENT_SECRET
@@ -87,7 +87,7 @@ def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
             temp_artist = search_data["artist"]
             temp_lyrics = search_data["lyrics"]
 
-            cur_score = fuzz.partial_token_sort_ratio(query, temp_title)
+            cur_score = fuzz.partial_token_sort_ratio(query, temp_title + " " + temp_artist)
 
             if cur_score > max_similarity_score:
                 if temp_lyrics and len(temp_lyrics) > MINIMUM_LYRICS_LENGTH:
