@@ -40,7 +40,7 @@
             class="rounded-md border border-solid border-gray-400 px-3 py-1 font-medium text-gray-900 hover:bg-gray-50"
             @click="increaseLyricsCompression()"
           >
-            인원 자동 줄이기
+            인원 줄이기
           </button>
         </div>
       </div>
