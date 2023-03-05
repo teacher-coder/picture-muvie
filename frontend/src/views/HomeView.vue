@@ -72,7 +72,7 @@ import { computed, ref } from 'vue'
 
 const query = ref('')
 const searching = ref(false)
-const defaultOffset = 30
+var defaultOffset = 30
 
 const lyrics_text = ref('')
 const lyrics_source = ref('')
@@ -102,7 +102,6 @@ const items = [
 
 function increaseLyricsCompression() {
   if (!lyrics_text.value) return
-
   let compressOffset = defaultOffset
   let curLineLength = lyrics_list.value.length
   while (curLineLength === lyrics_list.value.length) {
@@ -112,8 +111,20 @@ function increaseLyricsCompression() {
   }
 }
 
+function setDefaultOffset(lyric_text) {
+  while (
+    compressLyrics(lyric_text, defaultOffset)
+      .split('\n')
+      .filter((n) => n).length < 24 &&
+    defaultOffset > 0
+  ) {
+    defaultOffset--
+  }
+}
+
 async function searchLyrics() {
   searching.value = true
+  defaultOffset = 30
   const response = await api
     .getLyrics({
       params: { query: query.value },
@@ -123,7 +134,13 @@ async function searchLyrics() {
     })
   searching.value = false
   if (!response) return
-  lyrics_text.value = compressLyrics(response['lyrics'], defaultOffset)
+
+  const lyric_text = response['lyrics']
+  const lyric_line_length = lyric_text.split('\n').filter((n) => n).length
+  if (lyric_line_length > 24) {
+    setDefaultOffset(response['lyrics'])
+    lyrics_text.value = compressLyrics(lyric_text, defaultOffset)
+  } else lyrics_text.value = lyric_text
   lyrics_source.value = response['source']
   lyrics_title = response['title']
   lyrics_artist = response['artist']
