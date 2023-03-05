@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_lyrics(title: str = "") -> tuple[str]:
-    lyrics, source = None, None
+    source, artist, lyrics = None, None, None
 
     lyrics_links = get_links_naver_search(title)
     if lyrics_links:
@@ -52,6 +52,8 @@ def get_links_naver_search(title: str = "") -> list[str]:
         for item in items:
             lyrics_links.append(item["link"])
     except HTTPError as e:
+        logger.error(f"0_get_links_naver_search()__Error_Code:{str(e)})")
+    except KeyError as e:
         logger.error(f"0_get_links_naver_search()__Error_Code:{str(e)})")
 
     logger.debug(f"0_get_links_naver_search()__Success_lyrics_links:\n{lyrics_links}")
