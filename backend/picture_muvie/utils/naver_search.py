@@ -5,6 +5,7 @@ from urllib.parse import unquote_plus
 
 import requests
 from django.conf import settings
+from thefuzz import fuzz
 from requests.exceptions import HTTPError
 
 from .scraper import scrap_bugs, scrap_genie, scrap_lyrics_site, scrap_melon
@@ -92,3 +93,8 @@ def get_site_host(link):
     if not result:
         return
     return result.group(1)
+
+
+def get_match_ratio(query: str, title: str, artist: str) -> bool:
+    song_info = title + " " + artist
+    return (fuzz.partial_token_sort_ratio(query, song_info) > 50)
