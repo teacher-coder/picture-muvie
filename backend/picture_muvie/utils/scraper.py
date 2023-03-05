@@ -30,8 +30,8 @@ def scrap_genie(url: str, headers):
                 f"1_scrap_genie()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}"
             )
             return {
-                "title": re.sub("\s", "", elem_title.text),
-                "artist": re.sub("\s", "", elem_artist.text),
+                "title": elem_title.text.strip(),
+                "artist": elem_artist.text.strip(),
                 "lyrics": re.sub("\n+", "\n", elem_lyrics.text.replace("\r", "\n")),
             }
         except:
@@ -45,7 +45,7 @@ def scrap_genie(url: str, headers):
 
 
 def scrap_melon(url: str, headers):
-    if "lyrics" not in url:
+    if "songId" not in url:
         return
     try:
         response = requests.get(url, headers=headers)
@@ -66,8 +66,8 @@ def scrap_melon(url: str, headers):
                 f"2_scrap_melon()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}"
             )
             return {
-                "title": re.sub("\s", "", elem_title.text),
-                "artist": re.sub("\s", "", elem_artist.text),
+                "title": elem_title.text.strip(),
+                "artist": elem_artist.text.strip(),
                 "lyrics": text_with_newlines(elem_lyrics),
             }
         except:
@@ -94,7 +94,8 @@ def scrap_bugs(url: str, headers):
                 "#container > section.sectionPadding.summaryInfo.summaryTrack > div > div.basicInfo > table > tbody > tr:nth-child(1) > td > a"
             )
             remove_html_tag(elem_title)
-            remove_html_tag(elem_artist)
+            if elem_artist:
+                remove_html_tag(elem_artist)
             elem_lyrics = soup.select_one(
                 "#container > section.sectionPadding.contents.lyrics > div > div > p:nth-child(1) > xmp"
             )
@@ -102,8 +103,8 @@ def scrap_bugs(url: str, headers):
                 f"3_scrap_bugs()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}"
             )
             return {
-                "title": re.sub("\s", "", elem_title.text),
-                "artist": re.sub("\s", "", elem_artist.text),
+                "title": elem_title.text.strip(),
+                "artist": elem_artist.text.strip(),
                 "lyrics": re.sub("\n+", "\n", elem_lyrics.text.replace("\r", "\n")),
             }
         except:
@@ -133,7 +134,7 @@ def scrap_lyrics_site(url: str, headers):
                 f"4_scrap_lyrics_site()__Scrap_Success_Elemant:{elem_songInfo}\n{elem_lyrics}"
             )
             return {
-                "title": re.sub("\s", "", elem_songInfo.text),
+                "title": elem_songInfo.text.strip(),
                 "artist": "",
                 "lyrics": text_with_newlines(elem_lyrics),
             }
