@@ -11,7 +11,7 @@ from requests.exceptions import HTTPError
 from .scraper import scrap_bugs, scrap_genie, scrap_lyrics_site, scrap_melon
 
 MINIMUM_LYRICS_LENGTH = 30
-QUERY_DISPLAY_SIZE = 100
+QUERY_DISPLAY_SIZE = 40
 SIMILARITY_SCORE_OFFSET = 60
 
 CLIENT_ID = settings.NAVER_CLIENT_ID
@@ -73,13 +73,12 @@ def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/76.0.3809.100 Version/16.2 Safari/605.1.15",
     }
     source, title, artist, lyrics = None, None, None, None
-    max_similarity_score = 0
 
     for link in lyrics_links:
         host = get_site_host(link)
         if host and host in host_dict:
             search_data = host_dict[host]["scrap_lyrics"](link, headers)
-            if not search_data:
+            if not search_data or ("lyrics" not in search_data) or (len(search_data["lyrics"]) <= MINIMUM_LYRICS_LENGTH):
                 continue
 
             temp_source = host_dict[host]["source"]
@@ -88,16 +87,11 @@ def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
             temp_lyrics = search_data["lyrics"]
 
             cur_score = fuzz.partial_token_sort_ratio(query, temp_title + " " + temp_artist)
-
-            if cur_score > max_similarity_score:
-                if temp_lyrics and len(temp_lyrics) > MINIMUM_LYRICS_LENGTH:
-                    source = temp_source
-                    title = temp_title
-                    artist = temp_artist
-                    lyrics = temp_lyrics
-                max_similarity_score = cur_score
-
-            if max_similarity_score > SIMILARITY_SCORE_OFFSET:
+            if cur_score >= SIMILARITY_SCORE_OFFSET:
+                source = temp_source
+                title = temp_title
+                artist = temp_artist
+                lyrics = temp_lyrics
                 break
 
     return (source, title, artist, lyrics)
