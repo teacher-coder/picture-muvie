@@ -5,12 +5,14 @@ from urllib.parse import unquote_plus
 
 import requests
 from django.conf import settings
+from thefuzz import fuzz
 from requests.exceptions import HTTPError
 
 from .scraper import scrap_bugs, scrap_genie, scrap_lyrics_site, scrap_melon
 
 MINIMUM_LYRICS_LENGTH = 30
-QUERY_DISPLAY_SIZE = 100
+QUERY_DISPLAY_SIZE = 40
+SIMILARITY_SCORE_OFFSET = 60
 
 CLIENT_ID = settings.NAVER_CLIENT_ID
 CLIENT_SECRET = settings.NAVER_CLIENT_SECRET
@@ -18,27 +20,27 @@ CLIENT_SECRET = settings.NAVER_CLIENT_SECRET
 logger = logging.getLogger(__name__)
 
 
-def get_lyrics(title: str = "") -> tuple[str]:
-    source, artist, lyrics = None, None, None
+def get_lyrics(query: str = "") -> tuple[str]:
+    source, title, artist, lyrics = None, None, None, None
 
-    lyrics_links = get_links_naver_search(title)
+    lyrics_links = get_links_naver_search(query)
     if lyrics_links:
-        source, title, artist, lyrics = scrap_lyrics(lyrics_links)
+        source, title, artist, lyrics = scrap_lyrics(query, lyrics_links)
 
     return (source, title, artist, lyrics)
 
 
-def get_links_naver_search(title: str = "") -> list[str]:
+def get_links_naver_search(query: str = "") -> list[str]:
     lyrics_links = []
 
-    encText = urllib.parse.quote(f"{title} 가사")
+    encText = urllib.parse.quote(f"{query} 가사")
     url = (
         "https://openapi.naver.com/v1/search/webkr.json"
         + f"?query={encText}"
         + f"&display={QUERY_DISPLAY_SIZE}"
     )
     logger.debug(
-        f"0_get_links_naver_search()__query:{unquote_plus(title, encoding='utf-8', errors='replace')}"
+        f"0_get_links_naver_search()__query:{unquote_plus(query, encoding='utf-8', errors='replace')}"
     )
 
     headers = {
@@ -60,7 +62,7 @@ def get_links_naver_search(title: str = "") -> list[str]:
     return lyrics_links
 
 
-def scrap_lyrics(lyrics_links: list[str]) -> tuple[str]:
+def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
     host_dict = {
         "genie": {"source": "지니뮤직", "scrap_lyrics": scrap_genie},
         "melon": {"source": "멜론", "scrap_lyrics": scrap_melon},
@@ -76,14 +78,16 @@ def scrap_lyrics(lyrics_links: list[str]) -> tuple[str]:
         host = get_site_host(link)
         if host and host in host_dict:
             search_data = host_dict[host]["scrap_lyrics"](link, headers)
-            if search_data:
-                title = search_data["title"]
-                artist = search_data["artist"]
-                lyrics = search_data["lyrics"]
-                source = host_dict[host]["source"]
+            if not search_data or not search_data["lyrics"] or (len(search_data["lyrics"]) <= MINIMUM_LYRICS_LENGTH):
+                continue
 
-        if lyrics and len(lyrics) > MINIMUM_LYRICS_LENGTH:
-            break
+            source = host_dict[host]["source"]
+            title = search_data["title"]
+            artist = search_data["artist"]
+            cur_score = fuzz.partial_token_set_ratio(query, title + " " + artist)
+            if cur_score >= SIMILARITY_SCORE_OFFSET:
+                lyrics = search_data["lyrics"]
+                break
 
     return (source, title, artist, lyrics)
 
