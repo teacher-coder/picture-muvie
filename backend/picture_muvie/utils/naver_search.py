@@ -81,17 +81,12 @@ def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
             if not search_data or not search_data["lyrics"] or (len(search_data["lyrics"]) <= MINIMUM_LYRICS_LENGTH):
                 continue
 
-            temp_source = host_dict[host]["source"]
-            temp_title = search_data["title"]
-            temp_artist = search_data["artist"]
-            temp_lyrics = search_data["lyrics"]
-
-            cur_score = fuzz.partial_token_sort_ratio(query, temp_title + " " + temp_artist)
+            source = host_dict[host]["source"]
+            title = search_data["title"]
+            artist = search_data["artist"]
+            cur_score = fuzz.partial_token_set_ratio(query, title + " " + artist)
             if cur_score >= SIMILARITY_SCORE_OFFSET:
-                source = temp_source
-                title = temp_title
-                artist = temp_artist
-                lyrics = temp_lyrics
+                lyrics = search_data["lyrics"]
                 break
 
     return (source, title, artist, lyrics)
