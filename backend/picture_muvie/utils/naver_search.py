@@ -78,7 +78,7 @@ def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
         host = get_site_host(link)
         if host and host in host_dict:
             search_data = host_dict[host]["scrap_lyrics"](link, headers)
-            if not search_data or ("lyrics" not in search_data) or (len(search_data["lyrics"]) <= MINIMUM_LYRICS_LENGTH):
+            if not search_data or not search_data["lyrics"] or (len(search_data["lyrics"]) <= MINIMUM_LYRICS_LENGTH):
                 continue
 
             temp_source = host_dict[host]["source"]
