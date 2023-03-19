@@ -17,6 +17,22 @@ def make_picmuvie_doc(song) -> bytes:
 
 
 def make_doc(title: str, lyrics: list[str]) -> Document:
+    tpl = DocxTemplate('picture_muvie/templates/masterdoc_tpl.docx')
+    context = {}
+    for i, lyric in enumerate(lyrics):
+        make_lyric_subdoc(tpl, lyric[:10])
+        context[f"subdoc{i}"] = tpl.new_subdoc("picture_muvie/output/lyric.docx")
+    tpl.render(context)
+    return tpl
+
+def make_lyric_subdoc(tpl, lyric):
+    sub = DocxTemplate("picture_muvie/templates/subdoc_lyric_tpl.docx")
+    context = {"lyric": lyric}
+    sub.render(context)
+    sub.save("picture_muvie/output/lyric.docx")
+
+
+def make_doc1(title: str, lyrics: list[str]) -> Document:
     doc = DocxTemplate("./picture_muvie/templates/title.docx")
     make_title_page(doc, title)
     doc.add_section()
