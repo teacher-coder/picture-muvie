@@ -4,6 +4,7 @@
 # Django-Python
 .venv
 env
+static/
 
 # Vue.js
 node_modules
