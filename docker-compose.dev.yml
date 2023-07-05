@@ -18,6 +18,7 @@ services:
     command: /scripts/start_dev.sh
     volumes:
       - ./backend:/code
+      - static:/code/static
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
@@ -36,8 +37,6 @@ services:
       - ./frontend:/app/:ro
       # mounting the frontend directory from our local machine into /app. ro specifies the mounted volume is read-only
       - /app/node_modules
-    ports:
-      - "5173:5173"
     depends_on:
       - backend
       - db
@@ -56,12 +55,14 @@ services:
       - backend
     volumes:
       - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
+      - static:/code/static
     networks:
       - nginx-network
 
 
 volumes:
   postgres_data:
+  static:
 
 networks:
   nginx-network:
