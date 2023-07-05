@@ -20,6 +20,7 @@ services:
     command: /scripts/start_prod.sh
     volumes:
       - ./backend:/code
+      - static:/code/static
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
@@ -41,6 +42,7 @@ services:
       - 443:443
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
+      - static:/code/static
     networks:
       - nginx-network
       - backend-network
@@ -50,6 +52,7 @@ services:
 
 volumes:
   postgres_data:
+  static:
 
 
 networks:
