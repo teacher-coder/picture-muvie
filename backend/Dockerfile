@@ -41,7 +41,8 @@ RUN adduser \
     chmod -R +x /scripts
 
 # copy project
-ADD . /code/
+COPY --chown=django-user:django-use . /code
+RUN chown -R django-user /code
 EXPOSE 8000
 
 # PATH parmas setting

@@ -1,0 +1,21 @@
+name: Build and run Docker on Amazon Lightsail
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lightsail Docker Build and Run
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_SSH_ID }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          script: |
+            cd picture-muvie
+            git pull
+            docker-compose -f docker-compose.yml up --build -d

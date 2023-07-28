@@ -132,3 +132,6 @@ dmypy.json
 
 # SSL certificate files
 /openssl
+
+# log files
+**/*.log.*
