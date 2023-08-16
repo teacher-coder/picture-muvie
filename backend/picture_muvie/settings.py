@@ -52,6 +52,7 @@ MIDDLEWARE = [
 # CORS 관련 추가
 CORS_ORIGIN_WHITELIST = env("CORS_ORIGIN_WHITELIST").split(" ")
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ["https://picmuvie.zzolab.com"]
 
 # HOST Settings
 ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(" ")
