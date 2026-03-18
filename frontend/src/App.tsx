@@ -4,9 +4,9 @@ import Footer from "./components/Footer";
 
 export default function App() {
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-4">
+    <div className="mx-auto flex min-h-screen max-w-2xl flex-col px-6 sm:px-8">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 pb-16">
         <Home />
       </main>
       <Footer />
