@@ -5,8 +5,8 @@ from urllib.parse import unquote_plus
 
 import requests
 from django.conf import settings
-from thefuzz import fuzz
 from requests.exceptions import HTTPError
+from thefuzz import fuzz
 
 from .scraper import scrap_bugs, scrap_genie, scrap_lyrics_site, scrap_melon
 
@@ -34,14 +34,8 @@ def get_links_naver_search(query: str = "") -> list[str]:
     lyrics_links = []
 
     encText = urllib.parse.quote(f"{query} 가사")
-    url = (
-        "https://openapi.naver.com/v1/search/webkr.json"
-        + f"?query={encText}"
-        + f"&display={QUERY_DISPLAY_SIZE}"
-    )
-    logger.debug(
-        f"0_get_links_naver_search()__query:{unquote_plus(query, encoding='utf-8', errors='replace')}"
-    )
+    url = "https://openapi.naver.com/v1/search/webkr.json" + f"?query={encText}" + f"&display={QUERY_DISPLAY_SIZE}"
+    logger.debug(f"0_get_links_naver_search()__query:{unquote_plus(query, encoding='utf-8', errors='replace')}")
 
     headers = {
         "X-Naver-Client-Id": CLIENT_ID,
@@ -70,7 +64,11 @@ def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
         "lyrics": {"source": "노래가사", "scrap_lyrics": scrap_lyrics_site},
     }
     headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/76.0.3809.100 Version/16.2 Safari/605.1.15",
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Chrome/76.0.3809.100 Version/16.2 Safari/605.1.15"
+        ),
     }
     source, title, artist, lyrics = None, None, None, None
 
@@ -93,7 +91,7 @@ def scrap_lyrics(query: str, lyrics_links: list[str]) -> tuple[str]:
 
 
 def get_site_host(link):
-    p = re.compile("(?<=\.)(.*)(?=\.co)")
+    p = re.compile(r"(?<=\.)(.*)(?=\.co)")
     result = p.search(link)
     if not result:
         return

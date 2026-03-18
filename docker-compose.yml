@@ -3,9 +3,9 @@ version: '3.9'
 services:
   db:
     container_name: db
-    image: postgres:14
+    image: postgres:18
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     networks:

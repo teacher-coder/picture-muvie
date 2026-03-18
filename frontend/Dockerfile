@@ -1,4 +1,4 @@
-FROM node:19.6.0-alpine as build-stage
+FROM node:22-alpine AS build-stage
 
 RUN mkdir -p /app
 WORKDIR /app/
