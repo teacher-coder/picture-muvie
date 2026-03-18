@@ -16,12 +16,13 @@ RUN apk add --no-cache gcc libffi-dev musl-dev
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 COPY pyproject.toml uv.lock /code/
+ENV UV_PROJECT_ENVIRONMENT=/.venv
 RUN uv sync --frozen --no-dev --no-install-project
 
 FROM base AS final
 # Copy dependency filled virtual environment
 RUN apk upgrade --no-cache && apk add --no-cache libffi libpq
-COPY --from=builder /code/.venv /.venv
+COPY --from=builder /.venv /.venv
 
 # Set cmd commands authentication
 COPY ./scripts /scripts

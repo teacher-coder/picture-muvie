@@ -55,7 +55,7 @@ export default function Home() {
   async function handleSearch(e: FormEvent) {
     e.preventDefault();
     if (!query.trim()) {
-      setError("필수로 입력해야 합니다");
+      setError("노래 제목을 입력해주세요");
       return;
     }
     setError("");
@@ -78,7 +78,7 @@ export default function Home() {
       lyricsTitle.current = response.title;
       lyricsArtist.current = response.artist;
     } catch {
-      setLyricsText("에러가 발생했습니다. 다음에 다시 시도해주세요.");
+      setLyricsText("검색에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
       setSearching(false);
     }
@@ -97,47 +97,77 @@ export default function Home() {
   ];
 
   return (
-    <div className="my-5 flex w-full flex-col space-y-5">
-      <form className="flex flex-col space-y-3" onSubmit={handleSearch}>
-        <label htmlFor="query" className="text-xl font-bold">
-          가사 찾기
+    <div className="mt-10 flex flex-col gap-10">
+      {/* Hero section */}
+      <div className="text-center">
+        <h1 className="-tracking-wide text-3xl font-bold sm:text-4xl">
+          노래 가사를 검색하고
+          <br />
+          <span className="text-primary">학급 인원</span>에 맞게 나눠보세요
+        </h1>
+        <p className="mt-3 text-text-muted">
+          가사를 검색한 뒤, 학생 수에 맞게 조정하고 문서로 다운로드하세요
+        </p>
+      </div>
+
+      {/* Search */}
+      <form className="flex flex-col gap-3" onSubmit={handleSearch}>
+        <label htmlFor="query" className="text-sm font-semibold text-text-muted">
+          가사 검색
         </label>
-        <div className="flex flex-col">
+        <div className="flex gap-2">
           <input
+            id="query"
             name="query"
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="rounded-lg border border-solid border-gray-300 bg-gray-50 p-2.5"
-            placeholder="노래 제목과 가수 입력 - 예시) 출발 김동률, ditto newjeans"
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (error) setError("");
+            }}
+            className="flex-1 rounded-lg border border-border bg-white px-4 py-2.5 text-sm shadow-sm transition-all placeholder:text-text-muted/50 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+            placeholder="노래 제목과 가수 입력 (예: 출발 김동률)"
           />
-          {error && <span className="text-red-700">{error}</span>}
+          <button
+            type="submit"
+            disabled={searching}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-hover active:scale-[0.98] disabled:opacity-60"
+          >
+            {searching ? (
+              <svg
+                className="h-4 w-4 animate-spin"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+            ) : null}
+            {searching ? "검색 중" : "검색"}
+          </button>
         </div>
-        <button
-          type="submit"
-          className="flex justify-center rounded-md bg-rose-600 py-1 font-bold text-white hover:bg-rose-800"
-          disabled={searching}
-        >
-          {searching ? (
-            <svg
-              className="h-5 w-5 animate-spin"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-            >
-              <path d="M126.9 142.9c62.2-62.2 162.7-62.5 225.3-1L311 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H447.5c0 0 0 0 0 0H456c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L397.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C57.2 122 39.6 150.7 28.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM0 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L169 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H32.4h-.7H24c-13.3 0-24 10.7-24 24z" />
-            </svg>
-          ) : (
-            "검색"
-          )}
-        </button>
+        {error && (
+          <p className="text-sm text-primary">{error}</p>
+        )}
       </form>
 
-      <div className="flex flex-col space-y-3">
-        <div className="flex justify-between">
-          <label className="text-xl font-bold">가사 구간 나누기</label>
+      {/* Lyrics editor */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-text-muted">가사 편집</h2>
           <button
-            className="rounded-md border border-solid border-gray-400 px-3 py-1 font-medium text-gray-900 hover:bg-gray-50"
+            className="rounded-md border border-border bg-white px-3 py-1.5 text-sm font-medium text-text shadow-sm transition-all hover:bg-surface-alt active:scale-[0.98]"
             onClick={increaseLyricsCompression}
           >
             인원 줄이기
@@ -145,20 +175,22 @@ export default function Home() {
         </div>
         <textarea
           placeholder={
-            "입력된 줄의 개수는 학생 수를 나타냅니다\nenter키를 눌러 줄을 바꾸고 학생 수를 조정해주세요\n아래에 학급 인원 수를 확인하실 수 있습니다"
+            "입력된 줄의 개수는 학생 수를 나타냅니다\nenter키를 눌러 줄을 바꾸고 학생 수를 조정해주세요"
           }
           value={lyricsText}
           onChange={(e) => setLyricsText(e.target.value)}
-          rows={8}
-          className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+          rows={10}
+          className="w-full rounded-lg border border-border bg-white p-4 text-sm leading-relaxed shadow-sm transition-all placeholder:text-text-muted/50 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
         />
-        <div className="flex justify-between">
-          <div className="text-lg">출처 : {lyricsSource}</div>
-          <div className="text-right text-lg">
-            학급 인원 : {lyricsList.length}명
-          </div>
+        <div className="flex items-center justify-between text-sm text-text-muted">
+          <span>{lyricsSource ? `출처: ${lyricsSource}` : ""}</span>
+          <span className="font-medium tabular-nums">
+            학급 인원: <span className="text-text">{lyricsList.length}명</span>
+          </span>
         </div>
-        <DownloadButton name="다운로드" items={downloadItems} />
+        <div className="flex justify-end">
+          <DownloadButton name="다운로드" items={downloadItems} />
+        </div>
       </div>
     </div>
   );
