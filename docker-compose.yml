@@ -19,7 +19,6 @@ services:
       - 8000:8000
     command: /scripts/start_prod.sh
     volumes:
-      - ./backend:/code
       - static:/code/static
       - ./logs:/code/logs
     environment:
