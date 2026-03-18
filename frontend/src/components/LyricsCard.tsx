@@ -148,7 +148,7 @@ export default function LyricsCard({
             e.stopPropagation();
             setSplitting(true);
           }}
-          className="shrink-0 rounded p-1 text-text-muted/30 transition-all duration-200 hover:bg-amber-50 hover:text-amber-600 group-hover:text-text-muted/60"
+          className="shrink-0 rounded p-1 text-text-muted/50 transition-all duration-200 hover:bg-amber-50 hover:text-amber-600"
           title="가사 나누기"
         >
           <IconScissors />
