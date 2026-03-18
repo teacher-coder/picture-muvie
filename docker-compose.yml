@@ -21,6 +21,7 @@ services:
     volumes:
       - ./backend:/code
       - static:/code/static
+      - ./logs:/code/logs
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
@@ -43,6 +44,7 @@ services:
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
       - static:/code/static
+      - ./logs/nginx:/var/log/nginx
     networks:
       - nginx-network
       - backend-network
