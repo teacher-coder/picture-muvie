@@ -12,29 +12,60 @@ export default function Home() {
   const [lines, setLines] = useState<string[]>([]);
   const [lyricsSource, setLyricsSource] = useState("");
   const [error, setError] = useState("");
+  const [studentCount, setStudentCount] = useState("");
 
   const lyricsTitle = useRef("");
   const lyricsArtist = useRef("");
-  const defaultOffset = useRef(30);
-
-
+  const rawLyrics = useRef("");
 
   function textToLines(text: string): string[] {
     return text.split("\n").filter((n) => n);
   }
 
-  function setDefaultOffsetValue(lyricText: string) {
-    let offset = 30;
-    while (
-      compressLyrics(lyricText, offset).split("\n").filter((n) => n).length <
-        24 &&
-      offset > 0
-    ) {
-      offset--;
+  function compressToTargetLines(lyricText: string, target: number): string {
+    let offset = 0;
+    let result = lyricText;
+
+    // Increase offset until line count <= target
+    for (let o = 1; o <= 100; o++) {
+      const compressed = compressLyrics(lyricText, o);
+      const count = compressed.split("\n").filter((n) => n).length;
+      if (count <= target) {
+        result = compressed;
+        offset = o;
+        break;
+      }
     }
-    defaultOffset.current = offset;
+
+    // Fine-tune: find the smallest offset that gives exactly target or closest
+    if (offset > 0) {
+      for (let o = offset; o >= 1; o--) {
+        const compressed = compressLyrics(lyricText, o);
+        const count = compressed.split("\n").filter((n) => n).length;
+        if (count <= target) {
+          result = compressed;
+        } else {
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
+  function handleStudentCountChange(value: string) {
+    setStudentCount(value);
+    const count = parseInt(value);
+    if (!count || count < 1 || !rawLyrics.current) return;
+
+    const currentLines = textToLines(rawLyrics.current);
+    if (currentLines.length <= count) {
+      setLines(currentLines);
+    } else {
+      const compressed = compressToTargetLines(rawLyrics.current, count);
+      setLines(textToLines(compressed));
+    }
+  }
 
   function handleCardChange(index: number, text: string) {
     if (!text) {
@@ -80,22 +111,21 @@ export default function Home() {
     }
     setError("");
     setSearching(true);
-    defaultOffset.current = 30;
 
     try {
       const response = await getLyrics(query);
-      const lyricText = response.lyrics;
-      const lineLength = lyricText.split("\n").filter((n) => n).length;
+      rawLyrics.current = response.lyrics;
 
-      let resultText: string;
-      if (lineLength > 24) {
-        setDefaultOffsetValue(lyricText);
-        resultText = compressLyrics(lyricText, defaultOffset.current);
+      const count = parseInt(studentCount);
+      const currentLines = textToLines(response.lyrics);
+
+      if (count && count > 0 && currentLines.length > count) {
+        const compressed = compressToTargetLines(response.lyrics, count);
+        setLines(textToLines(compressed));
       } else {
-        resultText = lyricText;
+        setLines(currentLines);
       }
 
-      setLines(textToLines(resultText));
       setLyricsSource(response.source);
       lyricsTitle.current = response.title;
       lyricsArtist.current = response.artist;
@@ -173,6 +203,20 @@ export default function Home() {
               </span>
             )}
           </h2>
+          <div className="flex items-center gap-2">
+            <label htmlFor="studentCount" className="text-sm text-text-muted">
+              학급 인원
+            </label>
+            <input
+              id="studentCount"
+              type="number"
+              min="1"
+              value={studentCount}
+              onChange={(e) => handleStudentCountChange(e.target.value)}
+              placeholder="명"
+              className="w-16 rounded-md border border-border bg-white px-2 py-1 text-center text-sm tabular-nums shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+            />
+          </div>
         </div>
 
         {lines.length > 0 ? (
@@ -198,7 +242,7 @@ export default function Home() {
               가사를 검색하면 여기에 카드로 표시됩니다
             </p>
             <p className="mt-1 text-xs text-text-muted/60">
-              카드를 클릭해서 편집하고, Enter로 줄을 나눌 수 있어요
+              카드를 클릭해서 편집하고, 가위로 나눌 수 있어요
             </p>
           </div>
         )}
@@ -206,7 +250,7 @@ export default function Home() {
         <div className="flex items-center justify-between text-sm text-text-muted">
           <span>{lyricsSource ? `출처: ${lyricsSource}` : ""}</span>
           <span className="font-medium tabular-nums">
-            학급 인원: <span className="text-text">{lines.length}명</span>
+            현재 줄 수: <span className="text-text">{lines.length}줄</span>
           </span>
         </div>
         <div className="flex justify-end">
