@@ -109,24 +109,32 @@ export default function LyricsCard({
             className="w-full border-none bg-transparent text-sm leading-relaxed text-text outline-none"
           />
         ) : splitting ? (
-          <div className="flex flex-wrap items-center gap-0.5">
-            <span className="mb-1 mr-2 text-[11px] text-amber-600">나눌 위치를 선택하세요</span>
-            {splitWords().map((word, wi) => {
-              const isSpace = /^\s+$/.test(word);
-              if (isSpace) return <span key={wi}>{" "}</span>;
-              return (
-                <button
-                  key={wi}
-                  onClick={() => handleSplitAt(wi)}
-                  className="rounded px-1 py-0.5 text-sm leading-relaxed text-text transition-colors hover:bg-amber-100 hover:text-amber-800"
-                >
-                  {word}
-                </button>
-              );
-            })}
+          <div className="flex flex-wrap items-center">
+            <span className="mb-1 mr-2 text-[11px] text-amber-600">나눌 위치를 클릭하세요</span>
+            <div className="flex flex-wrap items-center">
+              {splitWords().map((word, wi) => {
+                const isSpace = /^\s+$/.test(word);
+                if (isSpace) return <span key={wi}>{" "}</span>;
+                const isLast = wi === splitWords().length - 1;
+                return (
+                  <span key={wi} className="inline-flex items-center">
+                    <span className="text-sm leading-relaxed text-text">{word}</span>
+                    {!isLast && (
+                      <button
+                        onClick={() => handleSplitAt(wi)}
+                        className="mx-0.5 inline-flex h-5 w-3 items-center justify-center rounded transition-all hover:bg-primary/10"
+                        title={`"${word}" 뒤에서 나누기`}
+                      >
+                        <span className="h-3.5 w-px bg-text-muted/20 transition-colors hover:bg-primary" />
+                      </button>
+                    )}
+                  </span>
+                );
+              })}
+            </div>
             <button
               onClick={() => setSplitting(false)}
-              className="ml-2 text-[11px] text-text-muted hover:text-text"
+              className="ml-3 text-[11px] text-text-muted hover:text-text"
             >
               취소
             </button>
