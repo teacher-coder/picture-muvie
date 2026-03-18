@@ -29,9 +29,7 @@ def make_doc(title: str, lyrics: list[str]) -> Document:
         add_formatted_text(paragraph, lyrics[i], "malgun_gothic", font_size, True)
         paragraph_page_number = doc.add_paragraph()
         paragraph_page_number.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        add_formatted_text(
-            paragraph_page_number, f"{i + 1}", "malgun_gothic", 10, False
-        )
+        add_formatted_text(paragraph_page_number, f"{i + 1}", "malgun_gothic", 10, False)
     doc.add_paragraph()
 
     return doc
@@ -79,9 +77,7 @@ def set_page_number_in_section(doc: Document, sect_index: int):
 """
 
 
-def add_formatted_text(
-    paragraph: Paragraph, text: str, font_name: str, size: int, is_bold: bool
-):
+def add_formatted_text(paragraph: Paragraph, text: str, font_name: str, size: int, is_bold: bool):
     run = paragraph.add_run(text)
     run.font.name = font_name
     run.font.size = Pt(size)

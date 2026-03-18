@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup, Comment
 from bs4.element import Tag
 from requests.exceptions import HTTPError
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -19,28 +18,22 @@ def scrap_genie(url: str, headers):
         html = response.text
         soup = BeautifulSoup(html, "html.parser")
         try:
-            elem_title = soup.select_one(
-                "#body-content > div.song-main-infos > div.info-zone > h2"
-            )
+            elem_title = soup.select_one("#body-content > div.song-main-infos > div.info-zone > h2")
             elem_artist = soup.select_one(
                 "#body-content > div.song-main-infos > div.info-zone > ul > li:nth-child(1) > span.value > a"
             )
             elem_lyrics = soup.select_one("#pLyrics > p")
             if not elem_title or not elem_lyrics:
                 return
-            logger.debug(
-                f"1_scrap_genie()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}"
-            )
+            logger.debug(f"1_scrap_genie()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}")
             return {
                 "title": preprocess(elem_title),
                 "artist": preprocess(elem_artist) if elem_artist else "Unknown",
                 "lyrics": re.sub("\n+", "\n", elem_lyrics.text.replace("\r", "\n")),
             }
-        except:
+        except Exception:
             logger.error(f"1_scrap_genie()__Scrap_Fail_URL:{url}")
-            logger.error(
-                f"1_scrap_genie()__Scrap_Fail_Error:{elem_title}_{elem_artist}\n{elem_lyrics}"
-            )
+            logger.error(f"1_scrap_genie()__Scrap_Fail_Error:{elem_title}_{elem_artist}\n{elem_lyrics}")
             return
     except HTTPError as e:
         logger.error(f"1_scrap_genie()__HTTP_Error:{url}\n{str(e)}")
@@ -55,28 +48,22 @@ def scrap_melon(url: str, headers):
         html = response.text
         soup = BeautifulSoup(html, "html.parser")
         try:
-            elem_title = soup.select_one(
-                "#downloadfrm > div > div > div.entry > div.info > div.song_name"
-            )
+            elem_title = soup.select_one("#downloadfrm > div > div > div.entry > div.info > div.song_name")
             elem_artist = soup.select_one(
                 "#downloadfrm > div > div > div.entry > div.info > div.artist > a > span:nth-child(1)"
             )
             elem_lyrics = soup.select_one("#d_video_summary")
             if not elem_title or not elem_lyrics:
                 return
-            logger.debug(
-                f"2_scrap_melon()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}"
-            )
+            logger.debug(f"2_scrap_melon()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}")
             return {
                 "title": preprocess(elem_title),
                 "artist": preprocess(elem_artist) if elem_artist else "Unknown",
                 "lyrics": text_with_newlines(elem_lyrics),
             }
-        except:
+        except Exception:
             logger.error(f"2_scrap_melon()__Scrap_Fail_URL:{url}")
-            logger.error(
-                f"2_scrap_melon()__Scrap_Fail_Error:{elem_title}_{elem_artist}\n{elem_lyrics}"
-            )
+            logger.error(f"2_scrap_melon()__Scrap_Fail_Error:{elem_title}_{elem_artist}\n{elem_lyrics}")
             return
     except HTTPError as e:
         logger.error(f"2_scrap_melon()__HTTP_Error:{url}\n{str(e)}")
@@ -93,26 +80,23 @@ def scrap_bugs(url: str, headers):
         try:
             elem_title = soup.select_one("#container > header > div > h1")
             elem_artist = soup.select_one(
-                "#container > section.sectionPadding.summaryInfo.summaryTrack > div > div.basicInfo > table > tbody > tr:nth-child(1) > td > a"
+                "#container > section.sectionPadding.summaryInfo.summaryTrack"
+                " > div > div.basicInfo > table > tbody > tr:nth-child(1) > td > a"
             )
             elem_lyrics = soup.select_one(
                 "#container > section.sectionPadding.contents.lyrics > div > div > p:nth-child(1) > xmp"
             )
             if not elem_title or not elem_lyrics:
                 return
-            logger.debug(
-                f"3_scrap_bugs()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}"
-            )
+            logger.debug(f"3_scrap_bugs()__Scrap_Success_Elemant:{elem_title}_{elem_artist}\n{elem_lyrics}")
             return {
                 "title": preprocess(elem_title),
                 "artist": preprocess(elem_artist) if elem_artist else "Unknown",
                 "lyrics": re.sub("\n+", "\n", elem_lyrics.text.replace("\r", "\n")),
             }
-        except:
+        except Exception:
             logger.error(f"3_scrap_bugs()__Scrap_Fail_URL:{url}")
-            logger.error(
-                f"3_scrap_bugs()__Scrap_Fail_Error:{elem_title}_{elem_artist}\n{elem_lyrics}"
-            )
+            logger.error(f"3_scrap_bugs()__Scrap_Fail_Error:{elem_title}_{elem_artist}\n{elem_lyrics}")
             return
     except HTTPError as e:
         logger.error(f"3_scrap_bugs()__HTTP_Error:{url}\n{str(e)}")
@@ -126,26 +110,22 @@ def scrap_lyrics_site(url: str, headers):
         soup = BeautifulSoup(html, "html.parser")
         try:
             elem_songInfo = soup.select_one(
-                "body > div.post-details-area.mb-80 > div > div > div.col-12.col-md-12.col-lg-8 > div.post-details-content > div > div.post-content.mt-0 > a"
+                "body > div.post-details-area.mb-80 > div > div"
+                " > div.col-12.col-md-12.col-lg-8 > div.post-details-content"
+                " > div > div.post-content.mt-0 > a"
             )
-            elem_lyrics = soup.select_one(
-                'div[style="font-size: 22px;word-break:break-all;"]'
-            )
+            elem_lyrics = soup.select_one('div[style="font-size: 22px;word-break:break-all;"]')
             if not elem_songInfo or not elem_lyrics:
                 return
-            logger.debug(
-                f"4_scrap_lyrics_site()__Scrap_Success_Elemant:{elem_songInfo}\n{elem_lyrics}"
-            )
+            logger.debug(f"4_scrap_lyrics_site()__Scrap_Success_Elemant:{elem_songInfo}\n{elem_lyrics}")
             return {
                 "title": preprocess(elem_songInfo),
                 "artist": "",
                 "lyrics": text_with_newlines(elem_lyrics),
             }
-        except:
+        except Exception:
             logger.error(f"4_scrap_lyrics_site()__Scrap_Fail_URL:{url}")
-            logger.error(
-                f"4_scrap_lyrics_site()__Scrap_Fail_Error:{elem_songInfo}\n{elem_lyrics}"
-            )
+            logger.error(f"4_scrap_lyrics_site()__Scrap_Fail_Error:{elem_songInfo}\n{elem_lyrics}")
             return
     except HTTPError as e:
         logger.error(f"4_scrap_lyrics_site()__HTTP_Error:{url}\n{str(e)}")
