@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { getLyrics, downloadLyricsDocx } from "../api/lyrics";
 import { compressLyrics, downloadFile } from "../utils";
 import DownloadButton from "./DownloadButton";
@@ -17,12 +17,7 @@ export default function Home() {
   const lyricsArtist = useRef("");
   const defaultOffset = useRef(30);
 
-  const lyricsText = useMemo(() => lines.join("\n"), [lines]);
 
-  const minLineLength = useMemo(
-    () => lyricsText.split("\n\n").length,
-    [lyricsText]
-  );
 
   function textToLines(text: string): string[] {
     return text.split("\n").filter((n) => n);
@@ -40,21 +35,6 @@ export default function Home() {
     defaultOffset.current = offset;
   }
 
-  function increaseLyricsCompression() {
-    if (lines.length === 0) return;
-    let compressOffset = defaultOffset.current;
-    const curLineLength = lines.length;
-    let newText = lyricsText;
-    while (
-      newText.split("\n").filter((n) => n).length === curLineLength
-    ) {
-      if (curLineLength === minLineLength) break;
-      compressOffset += 1;
-      newText = compressLyrics(lyricsText, compressOffset);
-    }
-    defaultOffset.current = compressOffset;
-    setLines(textToLines(newText));
-  }
 
   function handleCardChange(index: number, text: string) {
     if (!text) {
