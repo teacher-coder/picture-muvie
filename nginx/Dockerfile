@@ -1,5 +1,5 @@
 # Build step 1(installing node modules and preparing compiled build)
-FROM node:19.6.0-alpine as build-stage
+FROM node:22-alpine AS build-stage
 
 WORKDIR /app/
 
@@ -14,7 +14,7 @@ RUN npm run build
 
 
 # Build step 2(Deploying build on NGINX)
-FROM nginx:1.23-alpine as production-stage
+FROM nginx:stable-alpine AS production-stage
 
 COPY nginx/prod.conf /etc/nginx/nginx.conf
 COPY --from=build-stage /app/dist /dist/

@@ -3,7 +3,7 @@ name = "picture-muvie"
 version = "0.1.0"
 description = ""
 authors = [{ name = "Ridealist", email = "cjsn92@gmail.com" }]
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
     "django>=4.1.6,<5",
     "lxml>=4.9.2",
@@ -33,7 +33,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py313"
 line-length = 120
 
 [tool.ruff.lint]

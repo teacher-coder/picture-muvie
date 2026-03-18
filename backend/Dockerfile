@@ -1,5 +1,5 @@
 # Pull base image
-FROM python:3.11.1-alpine as base
+FROM python:3.13-alpine AS base
 LABEL maintainer="github.com/Ridiealist"
 
 # Set Python environment variables
@@ -10,7 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN mkdir -p /code
 WORKDIR /code
 
-FROM base as builder
+FROM base AS builder
 # Install build dependencies and uv
 RUN apk add --no-cache gcc libffi-dev musl-dev
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
@@ -18,7 +18,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock /code/
 RUN uv sync --frozen --no-dev --no-install-project
 
-FROM base as final
+FROM base AS final
 # Copy dependency filled virtual environment
 RUN apk add --no-cache libffi libpq
 COPY --from=builder /code/.venv /.venv
