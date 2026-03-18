@@ -34,8 +34,7 @@ services:
     build:
       context: ./frontend
     volumes:
-      - ./frontend:/app/:ro
-      # mounting the frontend directory from our local machine into /app. ro specifies the mounted volume is read-only
+      - ./frontend:/app/
       - /app/node_modules
     depends_on:
       - backend
