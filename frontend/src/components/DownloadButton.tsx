@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import IconChevron from "../icons/IconChevron";
 
 interface DownloadItem {
   name: string;
@@ -31,15 +32,7 @@ export default function DownloadButton({ name, items }: Props) {
         onClick={() => setOpen(!open)}
       >
         {name}
-        <svg
-          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2.5}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-        </svg>
+        <IconChevron className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div className="absolute bottom-full right-0 mb-2 w-full min-w-[120px] overflow-hidden rounded-lg border border-border bg-white shadow-lg">
