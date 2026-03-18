@@ -59,47 +59,57 @@ export default function Home() {
     if (!count || count < 1 || !rawLyrics.current) return;
 
     const currentLines = textToLines(rawLyrics.current);
+    let resultLines: string[];
     if (currentLines.length <= count) {
-      setLines(currentLines);
+      resultLines = currentLines;
     } else {
       const compressed = compressToTargetLines(rawLyrics.current, count);
-      setLines(textToLines(compressed));
+      resultLines = textToLines(compressed);
     }
+    setLines(resultLines);
+    if (resultLines.length !== count) {
+      setStudentCount(String(resultLines.length));
+    }
+  }
+
+  function updateLines(newLines: string[]) {
+    setLines(newLines);
+    setStudentCount(String(newLines.length));
   }
 
   function handleCardChange(index: number, text: string) {
     if (!text) {
-      setLines((prev) => prev.filter((_, i) => i !== index));
+      updateLines(lines.filter((_, i) => i !== index));
     } else {
-      setLines((prev) => prev.map((l, i) => (i === index ? text : l)));
+      updateLines(lines.map((l, i) => (i === index ? text : l)));
     }
   }
 
   function handleMergeWithPrev(index: number) {
     if (index === 0) return;
-    setLines((prev) => {
-      const merged = prev[index - 1] + " " + prev[index];
-      return prev
+    const merged = lines[index - 1] + " " + lines[index];
+    updateLines(
+      lines
         .filter((_, i) => i !== index)
-        .map((l, i) => (i === index - 1 ? merged : l));
-    });
+        .map((l, i) => (i === index - 1 ? merged : l))
+    );
   }
 
   function handleMergeAt(index: number) {
-    setLines((prev) => {
-      const merged = prev[index] + " " + prev[index + 1];
-      return prev
+    const merged = lines[index] + " " + lines[index + 1];
+    updateLines(
+      lines
         .filter((_, i) => i !== index + 1)
-        .map((l, i) => (i === index ? merged : l));
-    });
+        .map((l, i) => (i === index ? merged : l))
+    );
   }
 
   function handleSplitAtCursor(index: number, before: string, after: string) {
-    setLines((prev) => [
-      ...prev.slice(0, index),
+    updateLines([
+      ...lines.slice(0, index),
       before,
       after,
-      ...prev.slice(index + 1),
+      ...lines.slice(index + 1),
     ]);
   }
 
