@@ -119,13 +119,16 @@ export default function Home() {
       const count = parseInt(studentCount);
       const currentLines = textToLines(response.lyrics);
 
+      let resultLines: string[];
       if (count && count > 0 && currentLines.length > count) {
         const compressed = compressToTargetLines(response.lyrics, count);
-        setLines(textToLines(compressed));
+        resultLines = textToLines(compressed);
       } else {
-        setLines(currentLines);
+        resultLines = currentLines;
       }
 
+      setLines(resultLines);
+      setStudentCount(String(resultLines.length));
       setLyricsSource(response.source);
       lyricsTitle.current = response.title;
       lyricsArtist.current = response.artist;
@@ -247,12 +250,9 @@ export default function Home() {
           </div>
         )}
 
-        <div className="flex items-center justify-between text-sm text-text-muted">
-          <span>{lyricsSource ? `출처: ${lyricsSource}` : ""}</span>
-          <span className="font-medium tabular-nums">
-            현재 줄 수: <span className="text-text">{lines.length}줄</span>
-          </span>
-        </div>
+        {lyricsSource && (
+          <p className="text-sm text-text-muted">출처: {lyricsSource}</p>
+        )}
         <div className="flex justify-end">
           <DownloadButton name="다운로드" items={downloadItems} />
         </div>
