@@ -20,7 +20,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 
 FROM base AS final
 # Copy dependency filled virtual environment
-RUN apk add --no-cache libffi libpq
+RUN apk upgrade --no-cache && apk add --no-cache libffi libpq
 COPY --from=builder /code/.venv /.venv
 
 # Set cmd commands authentication
