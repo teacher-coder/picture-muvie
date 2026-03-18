@@ -3,9 +3,9 @@ version: '3.9'
 services:
   db:
     container_name: db
-    image: postgres:14
+    image: postgres:18
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     networks:
@@ -34,8 +34,7 @@ services:
     build:
       context: ./frontend
     volumes:
-      - ./frontend:/app/:ro
-      # mounting the frontend directory from our local machine into /app. ro specifies the mounted volume is read-only
+      - ./frontend:/app/
       - /app/node_modules
     depends_on:
       - backend

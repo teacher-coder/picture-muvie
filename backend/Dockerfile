@@ -1,5 +1,5 @@
 # Pull base image
-FROM python:3.11.1-alpine as base
+FROM python:3.13-alpine AS base
 LABEL maintainer="github.com/Ridiealist"
 
 # Set Python environment variables
@@ -10,24 +10,18 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN mkdir -p /code
 WORKDIR /code
 
-FROM base as builder
-# Set PIP environment variables
-ENV PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    POETRY_VERSION=1.3.2
+FROM base AS builder
+# Install build dependencies and uv
+RUN apk add --no-cache gcc libffi-dev musl-dev
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Install dependencies
-RUN apk add --no-cache gcc libffi-dev musl-dev && \
-    pip install "poetry==$POETRY_VERSION"
+COPY pyproject.toml uv.lock /code/
+RUN uv sync --frozen --no-dev --no-install-project
 
-COPY poetry.lock pyproject.toml /code/
-RUN python -m venv /.venv &&\
-    poetry export -f requirements.txt | /.venv/bin/pip install -r /dev/stdin
-
-FROM base as final
+FROM base AS final
 # Copy dependency filled virtual environment
-RUN apk add --no-cache libffi libpq
-COPY --from=builder /.venv /.venv
+RUN apk upgrade --no-cache && apk add --no-cache libffi libpq
+COPY --from=builder /code/.venv /.venv
 
 # Set cmd commands authentication
 COPY ./scripts /scripts
@@ -41,11 +35,11 @@ RUN adduser \
     chmod -R +x /scripts
 
 # copy project
-COPY --chown=django-user:django-use . /code
+COPY --chown=django-user:django-user . /code
 RUN chown -R django-user /code
 EXPOSE 8000
 
-# PATH parmas setting
+# PATH params setting
 ENV PATH="/scripts:/.venv/bin:$PATH"
 
 # user settings

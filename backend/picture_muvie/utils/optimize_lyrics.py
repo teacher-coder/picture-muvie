@@ -34,12 +34,7 @@ def count_lyric_type(lyric: str) -> dict:
 
 def get_unit_length(lyric: str) -> int:
     chr_dict = count_lyric_type(lyric)
-    return int(
-        chr_dict["alphabet"] * 0.5
-        + chr_dict["hangeul"]
-        + chr_dict["space"]
-        + chr_dict["special"] * 0.3
-    )
+    return int(chr_dict["alphabet"] * 0.5 + chr_dict["hangeul"] + chr_dict["space"] + chr_dict["special"] * 0.3)
 
 
 def get_optimized_font_size(lyrics: list[str]) -> int:
