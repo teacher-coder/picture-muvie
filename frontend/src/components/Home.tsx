@@ -12,7 +12,7 @@ export default function Home() {
   const [lines, setLines] = useState<string[]>([]);
   const [lyricsSource, setLyricsSource] = useState("");
   const [error, setError] = useState("");
-  const [studentCount, setStudentCount] = useState("");
+  const [studentCount, setStudentCount] = useState("30");
 
   const lyricsTitle = useRef("");
   const lyricsArtist = useRef("");
@@ -23,34 +23,29 @@ export default function Home() {
   }
 
   function compressToTargetLines(lyricText: string, target: number): string {
-    let offset = 0;
-    let result = lyricText;
+    // Find the smallest offset where line count <= target
+    // offset이 클수록 줄이 줄어듦, 작을수록 줄이 늘어남
+    let bestResult = lyricText;
+    let bestCount = textToLines(lyricText).length;
 
-    // Increase offset until line count <= target
-    for (let o = 1; o <= 100; o++) {
+    for (let o = 0; o <= 200; o++) {
       const compressed = compressLyrics(lyricText, o);
-      const count = compressed.split("\n").filter((n) => n).length;
+      const count = textToLines(compressed).length;
+
       if (count <= target) {
-        result = compressed;
-        offset = o;
+        // 목표 이하가 되는 순간 중 가장 가까운 것
+        if (Math.abs(count - target) < Math.abs(bestCount - target)) {
+          bestResult = compressed;
+          bestCount = count;
+        }
         break;
       }
+
+      bestResult = compressed;
+      bestCount = count;
     }
 
-    // Fine-tune: find the smallest offset that gives exactly target or closest
-    if (offset > 0) {
-      for (let o = offset; o >= 1; o--) {
-        const compressed = compressLyrics(lyricText, o);
-        const count = compressed.split("\n").filter((n) => n).length;
-        if (count <= target) {
-          result = compressed;
-        } else {
-          break;
-        }
-      }
-    }
-
-    return result;
+    return bestResult;
   }
 
   function handleStudentCountChange(value: string) {
